@@ -8,12 +8,17 @@ function AddClientForm() {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(true);
+   
+     // Assurez-vous que votre variable d'environnement est définie dans votre fichier .env
+    // Exemple: REACT_APP_API_BASE_URL=https://invoice-api-app.onrender.com
+    const apiUrl = process.env.APP_API_BASE_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
 
         try {
-            const response = await fetch('/api/client', {
+            const response = await fetch(`${apiUrl}/api/client`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

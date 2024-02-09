@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 
+const apiUrl = process.env.APP_API_BASE_URL;
 const fetchClientData = async () => {
-  const response = await fetch('/api/invoice/clientMonthlyInvoiceStats');
+  
+  const response = await fetch(`${apiUrl}/api/invoice/clientMonthlyInvoiceStats`);
   const data = await response.json();
   return data.data;
 };

@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 
 function DeleteFactureButton({ factureId, onFactureDeleted }) {
+  const apiUrl = process.env.APP_API_BASE_URL;
   const handleDelete = async () => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")) {
       try {
-        const response = await fetch(`/api/invoice/${factureId}`, {
+        const response = await fetch(`${apiUrl}/api/invoice/${factureId}`, {
           method: 'DELETE',
         });
         const data = await response.json();

@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react';
 const UseFilteredStats = (filter) => {
   const [filteredStats, setFilteredStats] = useState(null);
 
+  const apiUrl = process.env.APP_API_BASE_URL;
+
   useEffect(() => {
     const fetchFilteredStats = async () => {
       try {
         
-        const response = await fetch('/api/invoice/FilteredStats');
+        const response = await fetch(`${apiUrl}/api/invoice/FilteredStats`);
         if (!response.ok) {
           // Gérer les réponses non-OK
           console.error('Erreur lors de la récupération des statistiques filtrées:', response.statusText);
@@ -25,7 +27,7 @@ const UseFilteredStats = (filter) => {
     };
 
     fetchFilteredStats();
-  }, [filter]); // Dépendance sur le filtre pour mettre à jour les données lorsqu'il change
+  }, [filter, apiUrl]); // Dépendance sur le filtre pour mettre à jour les données lorsqu'il change
 
   return filteredStats;
 };

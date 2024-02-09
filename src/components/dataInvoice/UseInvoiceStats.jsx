@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 
 const UseInvoiceStats = () => {
   const [stats, setStats] = useState(null);
+  const apiUrl = process.env.APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('/api/invoice/stats');
+        const response = await fetch(`${apiUrl}/api/invoice/stats`);
         if (!response.ok) {
           // Gérer les réponses non-OK
           console.error('Erreur lors de la récupération des statistiques:', response.statusText);
@@ -24,7 +25,7 @@ const UseInvoiceStats = () => {
     };
 
     fetchStats();
-  }, []); // Tableau de dépendances vide pour exécuter une fois au montage
+  }, [apiUrl]); // Tableau de dépendances vide pour exécuter une fois au montage
 
   return stats;
 };
