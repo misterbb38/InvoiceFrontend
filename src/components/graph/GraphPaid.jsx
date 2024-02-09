@@ -1,13 +1,13 @@
 
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js'
-import useInvoiceStats from "../dataInvoice/useInvoiceStats";
+import UseInvoiceStats from "../dataInvoice/UseInvoiceStats";
 
 // Enregistrement de l'ArcElement nécessaire pour le Doughnut chart
 Chart.register(ArcElement);
 
 function GraphPaid() {
-  const stats = useInvoiceStats();
+  const stats = UseInvoiceStats();
   let invoicePaid;
   let countPaid = 0;
  

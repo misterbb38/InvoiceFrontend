@@ -1,10 +1,10 @@
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from 'chart.js'
-import useInvoiceStats from "../dataInvoice/useInvoiceStats";
+import UseInvoiceStats from "../dataInvoice/UseInvoiceStats";
 
 Chart.register(ArcElement);
 function GraphCancelled() {
-    const stats = useInvoiceStats();
+    const stats = UseInvoiceStats();
     let invoiceCancelled;
     let countCancelled = 0;
     let totalCount = 0;
