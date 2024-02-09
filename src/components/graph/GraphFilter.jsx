@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
-import UseFilteredStats from "../dataInvoice/useFilteredStats";
+import UseFilteredStats from "../dataInvoice/UseFilteredStats";
 
 const GraphFilter = () => {
   const filteredStats = UseFilteredStats(/* votre filtre ici, si nécessaire */);
