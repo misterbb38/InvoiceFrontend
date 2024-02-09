@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useInvoiceStats = () => {
+const UseInvoiceStats = () => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
@@ -29,4 +29,4 @@ const useInvoiceStats = () => {
   return stats;
 };
 
-export default useInvoiceStats;
+export default UseInvoiceStats;
