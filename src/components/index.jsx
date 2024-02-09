@@ -1,5 +1,5 @@
 import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
-import useInvoiceStats from "./dataInvoice/useInvoiceStats";
+import UseInvoiceStats from "./dataInvoice/UseInvoiceStats";
 import UseFilteredStats from "./dataInvoice/useFilteredStats";
 import GraphPaid from "./graph/GraphPaid";
 import GraphPending from "./graph/GraphPending";
@@ -8,7 +8,7 @@ import GraphFilter from "./graph/GraphFilter";
 import ClientInvoiceSummary from "./SummaryClient";
 import ClientMonthlyStats from "./ClientMonthlyStats";
 const HomeContent = () => {
-  const stats = useInvoiceStats();
+  const stats = UseInvoiceStats();
   const filteredStats = UseFilteredStats();
   console.log(stats);
   console.log(filteredStats);
