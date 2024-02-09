@@ -1,6 +1,6 @@
 import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
 import UseInvoiceStats from "./dataInvoice/UseInvoiceStats";
-import UseFilteredStats from "./dataInvoice/useFilteredStats";
+import UseFilteredStats from "./dataInvoice/UseFilteredStats";
 import GraphPaid from "./graph/GraphPaid";
 import GraphPending from "./graph/GraphPending";
 import GraphCancelled from "./graph/GraphCancelled";
