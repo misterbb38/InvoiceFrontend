@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
 function DeleteFactureButton({ factureId, onFactureDeleted }) {
-  const apiUrl = process.env.APP_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
   const handleDelete = async () => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")) {
       try {

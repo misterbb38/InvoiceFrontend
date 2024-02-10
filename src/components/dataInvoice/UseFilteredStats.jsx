@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const UseFilteredStats = (filter) => {
   const [filteredStats, setFilteredStats] = useState(null);
 
-  const apiUrl = process.env.APP_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchFilteredStats = async () => {

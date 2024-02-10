@@ -11,7 +11,7 @@ function AddClientForm() {
    
      // Assurez-vous que votre variable d'environnement est définie dans votre fichier .env
     // Exemple: REACT_APP_API_BASE_URL=https://invoice-api-app.onrender.com
-    const apiUrl = process.env.APP_API_BASE_URL;
+    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
