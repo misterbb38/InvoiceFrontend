@@ -12,6 +12,8 @@ function Facture() {
   const [currentPage, setCurrentPage] = useState(1);
   const facturesPerPage = 8;
 
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+
    // Fonction pour rafraîchir les factures
    const refreshFactures = async () => {
     setLoading(true);
@@ -24,7 +26,7 @@ function Facture() {
 
   const fetchFactures = async () => {
     try {
-      const response = await fetch('/api/invoice');
+      const response = await fetch(`${apiUrl}/api/invoice`);
       const data = await response.json();
       if (data.success) {
         const facturesFiltrees = data.data.filter(facture => facture.type === "facture");

@@ -7,10 +7,7 @@ export default defineConfig({
   server:{
      port : 3000,
     proxy: {
-      '/api':{
-        target: 'https://invoice-api-app.onrender.com',
-        changeOrigin:true
-      }
+      
     }
   },
   resolve: {
