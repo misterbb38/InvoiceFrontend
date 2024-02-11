@@ -1,45 +1,142 @@
-import  { useState } from 'react';
+// import  { useState } from 'react';
+
+// function UploadExcelButton() {
+//     const [selectedFile, setSelectedFile] = useState(null);
+//     const [showToast, setShowToast] = useState(false);
+//     const [toastMessage, setToastMessage] = useState("");
+//     const [isSuccess, setIsSuccess] = useState(true);
+
+//     // Assurez-vous que l'URL de l'API est correctement définie dans vos variables d'environnement
+//     // Par exemple, VITE_APP_API_BASE_URL = 'http://localhost:5000'
+//     const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+
+//     const handleFileChange = (event) => {
+//         setSelectedFile(event.target.files[0]);
+//     };
+
+//     const handleUpload = async () => {
+//         const formData = new FormData();
+//         formData.append('file', selectedFile);
+
+//         try {
+//             const response = await fetch(`${apiUrl}/api/invoice/upload`, {
+//                 method: 'POST',
+//                 body: formData, // Pas besoin de définir 'Content-Type' manuellement
+//             });
+
+//             // Vérifier si la requête a réussi
+//             if (!response.ok) {
+//                 const errorText = await response.text(); // Obtenez la réponse textuelle de l'erreur
+//                 setToastMessage(`Échec de l'enregistrement de la facture : ${errorText}`);
+//                 setIsSuccess(false);
+                
+//             }
+
+//             const jsonResponse = await response.json(); // Parsez la réponse JSON
+//             setToastMessage("Facture enregistrée avec succès");
+//             setIsSuccess(true);
+//             console.log('Success:', jsonResponse);
+            
+//         } catch (error) {
+//             console.error('Erreur lors de l\'upload:', error.message);
+            
+//             setToastMessage("Erreur lors de l'envoi de la facture");
+//             setIsSuccess(false);
+//         }
+//         setShowToast(true);
+//         setTimeout(() => setShowToast(false), 3000); // Cache le toast après 3 secondes
+//     };
+
+//     return (
+//         <div>
+//             {showToast && (
+//         <div className="toast toast-center toast-middle">
+//           <div
+//             className={`alert ${isSuccess ? "alert-success" : "alert-error"}`}
+//           >
+//             <span className="text-white">{toastMessage}</span>
+//           </div>
+//         </div>
+//       )}
+
+//             <input className='file-input file-input-bordered file-input-primary' type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+//             <button className='btn btn-primary mt-1' onClick={handleUpload} disabled={!selectedFile}>
+//                 Upload Excel File
+//             </button>
+//         </div>
+//     );
+// }
+
+// export default UploadExcelButton;
+
+import { useState, useRef } from 'react'; // Ajouter useRef
 
 function UploadExcelButton() {
     const [selectedFile, setSelectedFile] = useState(null);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [isSuccess, setIsSuccess] = useState(true);
+    const fileInputRef = useRef(null); // Ajouter une référence au champ input
 
-    // Assurez-vous que l'URL de l'API est correctement définie dans vos variables d'environnement
-    // Par exemple, VITE_APP_API_BASE_URL = 'http://localhost:5000'
     const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
     const handleFileChange = (event) => {
-        setSelectedFile(event.target.files[0]);
+        const file = event.target.files[0];
+        const fileType = file.type;
+        // Vérifier si le fichier est un fichier Excel
+        if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || fileType === 'application/vnd.ms-excel') {
+            setSelectedFile(file);
+        } else {
+            setToastMessage("Veuillez sélectionner un fichier Excel (.xlsx, .xls)");
+            setIsSuccess(false);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
+            event.target.value = ''; // Réinitialiser le champ si le fichier n'est pas Excel
+        }
     };
 
     const handleUpload = async () => {
+        if (!selectedFile) return; // S'assurer qu'un fichier est sélectionné
+
         const formData = new FormData();
         formData.append('file', selectedFile);
 
         try {
             const response = await fetch(`${apiUrl}/api/invoice/upload`, {
                 method: 'POST',
-                body: formData, // Pas besoin de définir 'Content-Type' manuellement
+                body: formData,
             });
 
-            // Vérifier si la requête a réussi
             if (!response.ok) {
-                const errorText = await response.text(); // Obtenez la réponse textuelle de l'erreur
-                throw new Error(errorText || 'Erreur lors de l\'upload du fichier');
+                const errorText = await response.text();
+                setToastMessage(`Échec de l'enregistrement de la facture : ${errorText}`);
+                setIsSuccess(false);
+            } else {
+                const jsonResponse = await response.json();
+                setToastMessage("Facture enregistrée avec succès");
+                setIsSuccess(true);
+                console.log('Success:', jsonResponse);
+                fileInputRef.current.value = ''; // Réinitialiser le champ de fichier en cas de succès
             }
-
-            const jsonResponse = await response.json(); // Parsez la réponse JSON
-            console.log('Success:', jsonResponse);
-            alert('Fichier uploadé avec succès');
         } catch (error) {
             console.error('Erreur lors de l\'upload:', error.message);
-            alert(`Erreur lors de l'upload du fichier: ${error.message}`);
+            setToastMessage("Erreur lors de l'envoi de la facture");
+            setIsSuccess(false);
         }
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
     };
 
     return (
         <div>
-
-            <input className='file-input file-input-bordered file-input-primary' type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
+            {showToast && (
+                <div className="toast toast-center toast-middle">
+                    <div className={`alert ${isSuccess ? "alert-success" : "alert-error"}`}>
+                        <span className="text-white">{toastMessage}</span>
+                    </div>
+                </div>
+            )}
+            <input ref={fileInputRef} className='file-input file-input-bordered file-input-primary' type="file" accept=".xlsx, .xls" onChange={handleFileChange} />
             <button className='btn btn-primary mt-1' onClick={handleUpload} disabled={!selectedFile}>
                 Upload Excel File
             </button>
