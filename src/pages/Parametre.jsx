@@ -1,12 +1,10 @@
-
+import { useState,} from 'react';
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb';
 import userThree from '../images/user/user-03.png';
 
 
 const Parametre = () => {
- 
-  
-  
+  const [currency, setCurrency] = useState('EUR'); // Devise par défaut
 
   return (
     <>
@@ -310,6 +308,28 @@ const Parametre = () => {
                 </form>
               </div>
             </div>
+            <div className="mb-5.5">
+  <label
+    className="mb-3 block text-sm font-medium base-content"
+    htmlFor="currency"
+  >
+    Currency
+  </label>
+  <select
+    className="w-full rounded border border-stroke bg-gray py-3 px-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
+    name="currency"
+    id="currency"
+    value={currency}
+    onChange={(e) => setCurrency(e.target.value)}
+  >
+    <option value="CFA">Euro (CFA)</option>
+    <option value="EUR">Euro (€)</option>
+    <option value="USD">US Dollar ($)</option>
+    <option value="GBP">British Pound (£)</option>
+    {/* Ajoutez autant d'options de devise que nécessaire */}
+  </select>
+</div>
+
           </div>
         </div>
       </div>

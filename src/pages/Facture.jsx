@@ -10,6 +10,8 @@ function Facture() {
   const [displayedFactures, setDisplayedFactures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currency, setCurrency] = useState('FCFA'); // EUR comme valeur par défaut
+
   const facturesPerPage = 8;
 
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
@@ -29,7 +31,10 @@ function Facture() {
       const response = await fetch(`${apiUrl}/api/invoice`);
       const data = await response.json();
       if (data.success) {
-        const facturesFiltrees = data.data.filter(facture => facture.type === "facture");
+        const facturesFiltrees = data.data
+          .filter(facture => facture.type === "facture")
+          .sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
+
         setAllFactures(facturesFiltrees);
         setDisplayedFactures(facturesFiltrees);
       }
@@ -39,6 +44,7 @@ function Facture() {
       setLoading(false);
     }
   };
+  
 
   const handleFilter = (filters) => {
     setLoading(true);
@@ -94,6 +100,23 @@ function Facture() {
       <div className="divider"></div> 
       {/* <h2 className="text-2xl font-bold mb-4">Factures</h2> */}
       <FilterFactures onFilter={handleFilter} />
+      {/* // Ajout dans le rendu JSX de Facture, là où vous souhaitez que le sélecteur apparaisse */}
+<div className="select-currency mt-1  ">
+  <label htmlFor="currencySelect">Choisir la devise: </label>
+  <select
+    id="currencySelect"
+    value={currency}
+    onChange={(e) => setCurrency(e.target.value)}
+    className="currency-selector select select-primary"
+  >
+    <option value="EUR">Euro (€)</option>
+    <option value="USD">Dollar américain ($)</option>
+    <option value="GBP">Livre sterling (£)</option>
+    <option value="FCFA">Franc CFA (FCFA)</option>
+    {/* Ajoutez d'autres options de devise selon le besoin */}
+  </select>
+</div>
+
       <div className="divider"></div> 
       {loading ? (
         <div className="loading loading-spinner text-primary" >Chargement...</div>
@@ -117,10 +140,10 @@ function Facture() {
                     <td>{facture.client.name}</td>
                     <td>{new Date(facture.date).toLocaleDateString()}</td>
                     <td>{facture.client.telephone}</td>
-                    <td>{facture.total.toFixed(2)}€</td>
+                    <td>{facture.total.toFixed(2)} {currency}</td>
                     <td>{facture.status}</td>
                     <td>
-                      <GeneratePDFButton invoice={facture} currency="FCFA" />
+                      <GeneratePDFButton invoice={facture} currency={currency} />
                       <EditFactureButton factureId={facture._id} onFactureUpdated={refreshFactures} />
                       <DeleteFactureButton factureId={facture._id} onFactureDeleted={refreshFactures}  />
                     </td>
