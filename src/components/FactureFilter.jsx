@@ -32,7 +32,7 @@
             className=" base-content bg-base-100 input input-bordered input-primary w-auto max-w-xs mx-2"
             type="date"
             name="date"
-            placeholder="Date"
+            placeholder="Coisis une date"
             value={filters.date}
             onChange={handleInputChange}
         />

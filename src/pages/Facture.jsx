@@ -12,7 +12,7 @@ function Facture() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currency, setCurrency] = useState('FCFA'); // EUR comme valeur par défaut
 
-  const facturesPerPage = 8;
+  const facturesPerPage = 10;
 
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
@@ -34,6 +34,7 @@ function Facture() {
         const facturesFiltrees = data.data
           .filter(facture => facture.type === "facture")
           .sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
+          console.log(data.data)
 
         setAllFactures(facturesFiltrees);
         setDisplayedFactures(facturesFiltrees);
