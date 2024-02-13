@@ -121,7 +121,7 @@ const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 
               <ClientInvoiceSummary selectedYear={selectedYear} />
             </div>
             <div className="bg-base-300 p-4 rounded-lg shadow h-[24vh]">
-              <ClientMonthlyStats/>
+              <ClientMonthlyStats selectedYear={selectedYear} />
             </div>
           </div>
         </div>

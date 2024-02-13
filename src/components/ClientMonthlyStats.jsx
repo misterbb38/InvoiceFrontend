@@ -1,27 +1,28 @@
-import { useState, useEffect } from 'react';
+import  { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
-const fetchClientData = async () => {
-  
-  const response = await fetch(`${apiUrl}/api/invoice/clientMonthlyInvoiceStats`);
-  const data = await response.json();
-  return data.data;
-};
 
-const ClientMonthlyStats = () => {
+const ClientMonthlyStats = ({ selectedYear }) => {
   const [data, setData] = useState({});
   const [selectedClient, setSelectedClient] = useState('');
   const [selectedMonth, setSelectedMonth] = useState(1);
 
   useEffect(() => {
+    const fetchClientData = async () => {
+      const response = await fetch(`${apiUrl}/api/invoice/clientMonthlyInvoiceStats?year=${selectedYear}`);
+      const data = await response.json();
+      return data.data;
+    };
+
     const fetchData = async () => {
       const fetchedData = await fetchClientData();
       setData(fetchedData);
-      setSelectedClient(Object.keys(fetchedData)[0]);
+      setSelectedClient(Object.keys(fetchedData)[0] || '');
     };
 
     fetchData();
-  }, []);
+  }, [selectedYear]);
 
   const handleClientChange = (e) => setSelectedClient(e.target.value);
   const handleMonthChange = (e) => setSelectedMonth(parseInt(e.target.value, 10));
@@ -74,5 +75,10 @@ const ClientMonthlyStats = () => {
     </div>
   );
 };
+
+ClientMonthlyStats.propTypes = {
+  selectedYear: PropTypes.string.isRequired,
+};
+
 
 export default ClientMonthlyStats;
