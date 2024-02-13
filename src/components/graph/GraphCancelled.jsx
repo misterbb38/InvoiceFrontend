@@ -1,41 +1,53 @@
 import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement } from 'chart.js'
+import { Chart, ArcElement } from 'chart.js';
 import UseInvoiceStats from "../dataInvoice/UseInvoiceStats";
+import PropTypes from 'prop-types';
 
+// Enregistrement de l'ArcElement nécessaire pour le Doughnut chart
 Chart.register(ArcElement);
-function GraphCancelled() {
-    const stats = UseInvoiceStats();
-    let invoiceCancelled;
-    let countCancelled = 0;
-    let totalCount = 0;
-  
-    if (stats) {
-      invoiceCancelled = stats.find(stat => stat._id === 'cancelled');
-      if (invoiceCancelled) {
-        countCancelled = invoiceCancelled.count;
-      }
-      totalCount = stats.reduce((acc, curr) => acc + curr.count, 0);
+
+function GraphCancelled({ selectedYear }) {
+  const stats = UseInvoiceStats(selectedYear);
+
+  let countCancelled = 0;
+  let totalCount = 0;
+
+  if (stats && stats.length > 0) {
+    // Filtrer les données pour l'année sélectionnée
+    const filteredStatsForYear = stats.filter(stat => stat._id.year === parseInt(selectedYear, 10));
+
+    // Trouver les statistiques pour les factures payées
+    const invoiceCancelled = filteredStatsForYear.find(stat => stat._id.status === 'cancelled');
+    if (invoiceCancelled) {
+      countCancelled = invoiceCancelled.count;
     }
-  
-    const data = {
-      labels: ['Factures Annulées', 'Autres Factures'],
-      datasets: [
-        {
-          data: [countCancelled, totalCount - countCancelled],
-          backgroundColor: ['#FF6384', '#36A2EB'],
-        },
-      ],
-    };
-    const options = {
-      maintainAspectRatio: false,
-    };
-  
-    return (
-      <div className="h-20 w-20">
-        <Doughnut data={data} options={options} />
-      </div>
-    );
+
+    // Calculer le nombre total des factures pour l'année sélectionnée
+    totalCount = filteredStatsForYear.reduce((acc, curr) => acc + curr.count, 0);
   }
-  
-  export default GraphCancelled;
-  
+
+  const data = {
+    labels: ['Factures Payées', 'Autres Factures'],
+    datasets: [
+      {
+        data: [countCancelled, totalCount - countCancelled],
+        backgroundColor: ['#36A2EB', '#FF6384'],
+      },
+    ],
+  };
+  const options = {
+    maintainAspectRatio: false,
+  };
+
+  return (
+    <div className='h-20 w-20'> {/* Ajustement pour un meilleur affichage */}
+      <Doughnut data={data} options={options} />
+    </div>
+  );
+}
+
+GraphCancelled.propTypes = {
+  selectedYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+
+export default GraphCancelled;

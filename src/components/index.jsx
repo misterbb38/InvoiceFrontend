@@ -1,3 +1,4 @@
+import { useState } from "react";
 import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
 import UseInvoiceStats from "./dataInvoice/UseInvoiceStats";
 import UseFilteredStats from "./dataInvoice/UseFilteredStats";
@@ -7,8 +8,11 @@ import GraphCancelled from "./graph/GraphCancelled";
 import GraphFilter from "./graph/GraphFilter";
 import ClientInvoiceSummary from "./SummaryClient";
 import ClientMonthlyStats from "./ClientMonthlyStats";
+import SelectYear from "./SelectYear"; // Assurez-vous que ce composant existe pour sélectionner l'année
 const HomeContent = () => {
-  const stats = UseInvoiceStats();
+  const [selectedYear, setSelectedYear] = useState('2024');
+  const stats = UseInvoiceStats(selectedYear);
+
   const filteredStats = UseFilteredStats();
   console.log(stats);
   console.log(filteredStats);
@@ -17,33 +21,46 @@ const HomeContent = () => {
       countPending = 0, totalAmountPending = 0,
       countCancelled = 0, totalAmountCancelled = 0,
       totalCount = 0;
-  if (stats) {
-    const invoicePaid = stats.find(stat => stat._id === 'paid');
-    const invoicePending = stats.find(stat => stat._id === 'pending');
-    const invoiceCancelled = stats.find(stat => stat._id === 'cancelled');
+ // Calcul des statistiques basé sur les données récupérées
+ if (stats) {
+  stats.forEach(({ _id, totalAmount, count }) => {
+    switch (_id.status) {
+      case 'paid':
+        countPaid += count;
+        totalAmountPaid += totalAmount;
+        break;
+      case 'pending':
+        countPending += count;
+        totalAmountPending += totalAmount;
+        break;
+      case 'cancelled':
+        countCancelled += count;
+        totalAmountCancelled += totalAmount;
+        break;
+      default:
+        break;
+    }
+  });
+  totalCount = stats.reduce((acc, curr) => acc + curr.count, 0);
+}
 
-    if (invoicePaid) {
-      ({ count: countPaid, totalAmount: totalAmountPaid } = invoicePaid);
-    }
-    if (invoicePending) {
-      ({ count: countPending, totalAmount: totalAmountPending } = invoicePending);
-    }
-    if (invoiceCancelled) {
-      ({ count: countCancelled, totalAmount: totalAmountCancelled } = invoiceCancelled);
-    }
-    totalCount = stats.reduce((acc, curr) => acc + curr.count, 0);
-  }
-  const percentagePaid = ((countPaid / totalCount) * 100).toFixed(1);
-  const percentagePending = ((countPending / totalCount) * 100).toFixed(1);
-  const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1);
+const percentagePaid = ((countPaid / totalCount) * 100).toFixed(1) || 0;
+const percentagePending = ((countPending / totalCount) * 100).toFixed(1) || 0;
+const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 0;
+
 
   
 
   return (
     <div className=" bg-base-100 p-4">
       <NavigationBreadcrumb pageName="Acceuil" />
+      
       {/* Section supérieure avec quatre boîtes */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="box bg-base-300 p-4 rounded-lg shadow">
+          <h2 className="text-lg font-semibold">Choisir une année</h2>
+          <SelectYear  selectedYear={selectedYear} onYearChange={(year) => setSelectedYear(year)} />
+        </div>
         <div className="bg-base-300 box p-4 rounded-lg shadow flex justify-between items-center">
           <div>
             <h2 className="text-lg base-content font-semibold">
@@ -54,7 +71,7 @@ const HomeContent = () => {
             <p className="text-xs font-bold">poucentage:{percentagePaid}% </p>
           </div>
           <div>
-            <GraphPaid />
+            <GraphPaid  selectedYear={selectedYear} />
             <p className="text-xl"></p>
           </div>
         </div>
@@ -69,7 +86,7 @@ const HomeContent = () => {
             <p className="text-xs font-bold">poucentage:{percentagePending}% </p>
           </div>
           <div>
-            <GraphPending />
+            <GraphPending  selectedYear={selectedYear} />
             <p className="text-xl"></p>
           </div>
         </div>
@@ -83,14 +100,11 @@ const HomeContent = () => {
             <p className="text-xs font-bold">poucentage:{percentageCancelled}% </p>
           </div>
           <div>
-            <GraphCancelled />
+            <GraphCancelled selectedYear={selectedYear}  />
             <p className="text-xl"></p>
           </div>
         </div>
-        <div className="box bg-base-300 p-4 rounded-lg shadow">
-          <h2 className="text-lg font-semibold">Titre 4</h2>
-          <span className="text-xl">27</span>
-        </div>
+        
       </div>
       {/* Section divisée en deux parties */}
       <div className="flex flex-wrap -mx-4 mb-8">

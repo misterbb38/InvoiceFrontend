@@ -1,29 +1,37 @@
 import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement } from 'chart.js'
+import { Chart, ArcElement } from 'chart.js';
 import UseInvoiceStats from "../dataInvoice/UseInvoiceStats";
+import PropTypes from 'prop-types';
 
+// Enregistrement de l'ArcElement nécessaire pour le Doughnut chart
 Chart.register(ArcElement);
 
-function GraphPending() {
-  const stats = UseInvoiceStats();
-  let invoicePending;
+function GraphPending({ selectedYear }) {
+  const stats = UseInvoiceStats(selectedYear);
+
   let countPending = 0;
   let totalCount = 0;
 
-  if (stats) {
-    invoicePending = stats.find(stat => stat._id === 'pending');
+  if (stats && stats.length > 0) {
+    // Filtrer les données pour l'année sélectionnée
+    const filteredStatsForYear = stats.filter(stat => stat._id.year === parseInt(selectedYear, 10));
+
+    // Trouver les statistiques pour les factures payées
+    const invoicePending = filteredStatsForYear.find(stat => stat._id.status === 'pending');
     if (invoicePending) {
       countPending = invoicePending.count;
     }
-    totalCount = stats.reduce((acc, curr) => acc + curr.count, 0);
+
+    // Calculer le nombre total des factures pour l'année sélectionnée
+    totalCount = filteredStatsForYear.reduce((acc, curr) => acc + curr.count, 0);
   }
 
   const data = {
-    labels: ['Factures En Attente', 'Autres Factures'],
+    labels: ['Factures Payées', 'Autres Factures'],
     datasets: [
       {
         data: [countPending, totalCount - countPending],
-        backgroundColor: ['#FFCE56', '#FF6384'],
+        backgroundColor: ['#36A2EB', '#FF6384'],
       },
     ],
   };
@@ -32,10 +40,14 @@ function GraphPending() {
   };
 
   return (
-    <div className="h-20 w-20">
+    <div className='h-20 w-20'> {/* Ajustement pour un meilleur affichage */}
       <Doughnut data={data} options={options} />
     </div>
   );
 }
 
-export default GraphPending;
+GraphPending.propTypes = {
+  selectedYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};
+
+export default  GraphPending;
