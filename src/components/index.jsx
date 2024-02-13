@@ -118,7 +118,7 @@ const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 
           {/* Contenu de la partie droite, divisé verticalement */}
           <div className="flex flex-col space-y-4">
             <div className="mt-2 bg-base-300 p-4 rounded-lg shadow h-[24vh]">
-              <ClientInvoiceSummary/>
+              <ClientInvoiceSummary selectedYear={selectedYear} />
             </div>
             <div className="bg-base-300 p-4 rounded-lg shadow h-[24vh]">
               <ClientMonthlyStats/>

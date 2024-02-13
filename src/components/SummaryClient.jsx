@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react";
-import UseSummaryClient from "./dataInvoice/UseSummaryClient"; // Vérifiez le chemin d'importation
+import  { useState, useEffect } from "react";
+import UseSummaryClient from "./dataInvoice/UseSummaryClient"; // Assurez-vous que le chemin d'importation est correct
+import PropTypes from 'prop-types';
 
-const ClientInvoiceSummary = () => {
-  const summaryClient = UseSummaryClient();
+const ClientInvoiceSummary = ({ selectedYear }) => {
+  const summaryClient = UseSummaryClient(selectedYear);
   const [selectedClient, setSelectedClient] = useState("");
 
   useEffect(() => {
     if (summaryClient && summaryClient.length > 0) {
+      // Utilisez une propriété unique du client pour la sélection, par ex. email
       setSelectedClient(summaryClient[0].client.email); // Pré-sélection du premier client
     }
   }, [summaryClient]);
@@ -34,24 +36,14 @@ const ClientInvoiceSummary = () => {
       </select>
 
       {selectedClientData && (
-        <div className=" flex-wrap  grid grid-cols-2 gap-4">
-          <div className="w-full  ">
-            <h5 className="text-lg font-semibold">Statistiques </h5>
+        <div className="mt-4 flex-wrap grid grid-cols-2 gap-4">
+          <div className="w-full">
+            <h5 className="text-lg font-semibold">Statistiques</h5>
             <div className="mt-1">
-              <p
-                className={`text-xs font-bold ${
-                  selectedClientData.totalAmountPaid > 0 ? "text-green-500" : ""
-                }`}
-              >
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountPaid > 0 ? "text-green-500" : ""}`}>
                 Factures Payées: {selectedClientData.countPaid}
               </p>
-              <p
-                className={`text-xs font-bold ${
-                  selectedClientData.totalAmountPending > 0
-                    ? "text-red-500"
-                    : ""
-                }`}
-              >
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountPending > 0 ? "text-yellow-500" : ""}`}>
                 Factures En Attente: {selectedClientData.countPending}
               </p>
               <p className="text-xs font-bold">
@@ -59,28 +51,17 @@ const ClientInvoiceSummary = () => {
               </p>
             </div>
           </div>
-          <div className="w-full ">
+          <div className="w-full">
             <p className="text-lg font-semibold">Sommes</p>
             <div className="mt-1">
-              <p
-                className={`text-xs font-bold ${
-                  selectedClientData.totalAmountPaid > 0 ? "text-green-500" : ""
-                }`}
-              >
-                Factures Payées: {selectedClientData.totalAmountPaid}
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountPaid > 0 ? "text-green-500" : ""}`}>
+                Factures Payées: {selectedClientData.totalAmountPaid} €
               </p>
-              <p
-                className={`text-xs font-bold ${
-                  selectedClientData.totalAmountPending > 0
-                    ? "text-red-500"
-                    : ""
-                }`}
-              >
-                Factures En Attente: {selectedClientData.totalAmountPending}
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountPending > 0 ? "text-yellow-500" : ""}`}>
+                Factures En Attente: {selectedClientData.totalAmountPending} €
               </p>
-
               <p className="text-xs font-bold">
-                Factures Annulées: {selectedClientData.totalAmountCancelled}
+                Factures Annulées: {selectedClientData.totalAmountCancelled} €
               </p>
             </div>
           </div>
@@ -88,6 +69,10 @@ const ClientInvoiceSummary = () => {
       )}
     </div>
   );
+};
+
+ClientInvoiceSummary.propTypes = {
+  selectedYear: PropTypes.string.isRequired,
 };
 
 export default ClientInvoiceSummary;
