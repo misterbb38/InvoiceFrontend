@@ -55,13 +55,13 @@ const ClientInvoiceSummary = ({ selectedYear }) => {
             <p className="text-lg font-semibold">Sommes</p>
             <div className="mt-1">
               <p className={`text-xs font-bold ${selectedClientData.totalAmountPaid > 0 ? "text-green-500" : ""}`}>
-                Factures Payées: {selectedClientData.totalAmountPaid} €
+                Factures Payées: {selectedClientData.totalAmountPaid} cfa
               </p>
               <p className={`text-xs font-bold ${selectedClientData.totalAmountPending > 0 ? "text-yellow-500" : ""}`}>
-                Factures En Attente: {selectedClientData.totalAmountPending} €
+                Factures En Attente: {selectedClientData.totalAmountPending} cfa
               </p>
               <p className="text-xs font-bold">
-                Factures Annulées: {selectedClientData.totalAmountCancelled} €
+                Factures Annulées: {selectedClientData.totalAmountCancelled} cfa
               </p>
             </div>
           </div>

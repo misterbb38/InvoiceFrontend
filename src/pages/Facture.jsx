@@ -4,6 +4,7 @@ import GeneratePDFButton from '../components/GeneratePDFButton';
 import FilterFactures from '../components/FactureFilter';
 import DeleteFactureButton from '../components/DeleteFactureButton';
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb';
+import CurrencySelector from '../components/CurrencySelector'; // Importez le nouveau composant
 
 function Facture() {
   const [allFactures, setAllFactures] = useState([]);
@@ -102,21 +103,7 @@ function Facture() {
       {/* <h2 className="text-2xl font-bold mb-4">Factures</h2> */}
       <FilterFactures onFilter={handleFilter} />
       {/* // Ajout dans le rendu JSX de Facture, là où vous souhaitez que le sélecteur apparaisse */}
-<div className="select-currency mt-1  ">
-  <label htmlFor="currencySelect">Choisir la devise: </label>
-  <select
-    id="currencySelect"
-    value={currency}
-    onChange={(e) => setCurrency(e.target.value)}
-    className="currency-selector select select-primary"
-  >
-    <option value="EUR">Euro (€)</option>
-    <option value="USD">Dollar américain ($)</option>
-    <option value="GBP">Livre sterling (£)</option>
-    <option value="FCFA">Franc CFA (FCFA)</option>
-    {/* Ajoutez d'autres options de devise selon le besoin */}
-  </select>
-</div>
+      <CurrencySelector currency={currency} setCurrency={setCurrency} />
 
       <div className="divider"></div> 
       {loading ? (

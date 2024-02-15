@@ -116,7 +116,7 @@ function Devis() {
                     <td>{facture.client.name}</td>
                     <td>{new Date(facture.date).toLocaleDateString()}</td>
                     <td>{facture.client.telephone}</td>
-                    <td>{facture.total.toFixed(2)}€</td>
+                    <td>{facture.total.toFixed(2)}cfa</td>
                     <td>{facture.status}</td>
                     <td>
                       <GeneratePDFButton invoice={facture} currency="FCFA" />

@@ -323,7 +323,7 @@ const Parametre = () => {
     onChange={(e) => setCurrency(e.target.value)}
   >
     <option value="CFA">Euro (CFA)</option>
-    <option value="EUR">Euro (€)</option>
+    <option value="EUR">Euro (cfa)</option>
     <option value="USD">US Dollar ($)</option>
     <option value="GBP">British Pound (£)</option>
     {/* Ajoutez autant d'options de devise que nécessaire */}

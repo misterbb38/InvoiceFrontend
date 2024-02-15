@@ -67,7 +67,7 @@ const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 
               Facture payée
             </h2>
             <span className="text-xs font-bold">Nombre: {countPaid}</span>
-            <p className="text-xs font-bold">somme:{totalAmountPaid} €</p>
+            <p className="text-xs font-bold">somme:{totalAmountPaid} cfa</p>
             <p className="text-xs font-bold">poucentage:{percentagePaid}% </p>
           </div>
           <div>
@@ -82,7 +82,7 @@ const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 
               Facture impayée
             </h2>
             <span className="text-xs font-bold">Nombre: {countPending}</span>
-            <p className="text-xs font-bold">somme:{totalAmountPending} €</p>
+            <p className="text-xs font-bold">somme:{totalAmountPending} cfa</p>
             <p className="text-xs font-bold">poucentage:{percentagePending}% </p>
           </div>
           <div>
@@ -96,7 +96,7 @@ const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 
               Facture annullée
             </h2>
             <span className="text-xs font-bold">Nombre: {countCancelled}</span>
-            <p className="text-xs font-bold">somme:{totalAmountCancelled} €</p>
+            <p className="text-xs font-bold">somme:{totalAmountCancelled} cfa</p>
             <p className="text-xs font-bold">poucentage:{percentageCancelled}% </p>
           </div>
           <div>
