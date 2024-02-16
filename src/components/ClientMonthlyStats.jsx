@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
@@ -10,15 +10,34 @@ const ClientMonthlyStats = ({ selectedYear }) => {
 
   useEffect(() => {
     const fetchClientData = async () => {
-      const response = await fetch(`${apiUrl}/api/invoice/clientMonthlyInvoiceStats?year=${selectedYear}`);
+      // Récupérer le token de l'utilisateur depuis localStorage
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      const token = userInfo?.token;
+      
+      const response = await fetch(`${apiUrl}/api/invoice/clientMonthlyInvoiceStats?year=${selectedYear}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`, // Inclure l'en-tête d'autorisation avec le token
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur lors de la récupération des données: ${response.statusText}`);
+      }
+
       const data = await response.json();
       return data.data;
     };
 
     const fetchData = async () => {
-      const fetchedData = await fetchClientData();
-      setData(fetchedData);
-      setSelectedClient(Object.keys(fetchedData)[0] || '');
+      try {
+        const fetchedData = await fetchClientData();
+        setData(fetchedData);
+        setSelectedClient(Object.keys(fetchedData)[0] || '');
+      } catch (error) {
+        console.error(error.message);
+        // Gestion d'erreur, par exemple, en définissant un état d'erreur ou en affichant un message
+      }
     };
 
     fetchData();

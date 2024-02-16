@@ -2,10 +2,18 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import { FiMenu, FiChevronLeft, FiSearch, FiBell, FiSettings } from "react-icons/fi";
 import UserPhoto from "../assets/icone/react.svg";
+import { useNavigate } from "react-router-dom"; // Importer useNavigate
+
 
 function TopBar({ toggleSidebar, isSidebarOpen }) {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const navigate = useNavigate(); // Hook pour naviguer
+
+  const handleLogout = () => {
+    localStorage.clear(); // Vide localStorage
+    navigate("/"); // Redirige vers la page de connexion
+  };
 
   return (
     <div className="flex items-center justify-between bg-base-300 p-4 shadow">
@@ -64,7 +72,8 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
                 Réglages
               </a>
               <a
-                href="/logout"
+                onClick={handleLogout}
+                
                 className="block px-4 py-2 text-sm text-base-content hover:bg-base-200"
               >
                 Déconnexion

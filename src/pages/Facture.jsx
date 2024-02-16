@@ -27,15 +27,44 @@ function Facture() {
     fetchFactures();
   }, []);
 
+  // const fetchFactures = async () => {
+  //   try {
+  //     const response = await fetch(`${apiUrl}/api/invoice`);
+  //     const data = await response.json();
+  //     if (data.success) {
+  //       const facturesFiltrees = data.data
+  //         .filter(facture => facture.type === "facture")
+  //         .sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
+  //         console.log(data.data)
+
+  //       setAllFactures(facturesFiltrees);
+  //       setDisplayedFactures(facturesFiltrees);
+  //     }
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Erreur:", error);
+  //     setLoading(false);
+  //   }
+  // };
   const fetchFactures = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/invoice`);
+      // Récupérer le token de l'utilisateur stocké localement
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      const token = userInfo?.token;
+
+      const response = await fetch(`${apiUrl}/api/invoice`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+          'Content-Type': 'application/json',
+        },
+      });
+
       const data = await response.json();
       if (data.success) {
         const facturesFiltrees = data.data
           .filter(facture => facture.type === "facture")
           .sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
-          console.log(data.data)
 
         setAllFactures(facturesFiltrees);
         setDisplayedFactures(facturesFiltrees);
@@ -46,7 +75,6 @@ function Facture() {
       setLoading(false);
     }
   };
-  
 
   const handleFilter = (filters) => {
     setLoading(true);

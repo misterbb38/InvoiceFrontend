@@ -16,12 +16,12 @@ function Sidebar() {
   const [selectedMenuItem, setSelectedMenuItem] = useState(1);
 
   const menuItems = [
-    { id: 1, label: 'Accueil', route: '/', icon: faHome },
-    { id: 2, label: 'Facture', route: '/Facture', icon: faFileInvoiceDollar },
-    { id: 3, label: 'Devis', route: '/Devis', icon: faFileAlt },
-    { id: 4, label: 'Formulaire', route: '/Formulaire', icon: faClipboardList },
-    { id: 5, label: 'Instruction', route: '/instruction', icon: faBook },
-    { id: 6, label: 'Parametre', route: '/parametre', icon: faCog },
+    { id: 1, label: 'Accueil', route: '/dash', icon: faHome },
+    { id: 2, label: 'Facture', route: '/dash/Facture', icon: faFileInvoiceDollar },
+    { id: 3, label: 'Devis', route: '/dash/Devis', icon: faFileAlt },
+    { id: 4, label: 'Formulaire', route: '/dash/Formulaire', icon: faClipboardList },
+    { id: 5, label: 'Instruction', route: '/dash/instruction', icon: faBook },
+    { id: 6, label: 'Parametre', route: '/dash/parametre', icon: faCog },
   ];
 
   const handleMenuItemClick = (id) => {
