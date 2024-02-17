@@ -72,6 +72,7 @@ import Devis from './pages/Devis';
 import Formulaire from './pages/Formulaire';
 import Instruction from './pages/Instruction';
 import Parametre from './pages/Parametre';
+import Home from './pages/home';
 
 function AppLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -97,7 +98,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<SignIn />} />
+      <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route element={<ProtectedRoute />}>
           <Route path="/dash" element={<AppLayout />}>

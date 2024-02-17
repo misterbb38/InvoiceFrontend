@@ -12,7 +12,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
 
   const handleLogout = () => {
     localStorage.clear(); // Vide localStorage
-    navigate("/"); // Redirige vers la page de connexion
+    navigate("/signin"); // Redirige vers la page de connexion
   };
 
   return (
