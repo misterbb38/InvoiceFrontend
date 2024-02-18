@@ -4,10 +4,16 @@ function DeleteFactureButton({ factureId, onFactureDeleted }) {
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
   const handleDelete = async () => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")) {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+        const token = userInfo?.token; // S'assurer d'utiliser le token actuel
       try {
         const response = await fetch(`${apiUrl}/api/invoice/${factureId}`, {
           method: 'DELETE',
-        });
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
+        }
+        }); 
         const data = await response.json();
         if (data.success) {
           onFactureDeleted(); // Rafraîchir la liste des factures

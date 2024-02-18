@@ -49,8 +49,8 @@ function Facture() {
   const fetchFactures = async () => {
     try {
       // Récupérer le token de l'utilisateur stocké localement
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const token = userInfo?.token;
+              const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+              const token = userInfo?.token;
 
       const response = await fetch(`${apiUrl}/api/invoice`, {
         method: 'GET',
@@ -153,7 +153,7 @@ function Facture() {
               <tbody>
                 {currentFactures.map(facture => (
                   <tr key={facture._id}>
-                    <td>{facture.client.name}</td>
+                    <td>{facture.client.name } </td>
                     <td>{new Date(facture.date).toLocaleDateString()}</td>
                     <td>{facture.client.telephone}</td>
                     <td>{facture.total.toFixed(2)} {currency}</td>

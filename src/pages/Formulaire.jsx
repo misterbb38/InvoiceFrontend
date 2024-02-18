@@ -12,11 +12,20 @@ const Formulaire = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchClients = async () => {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+      const token = userInfo?.token; // Récupérer le token depuis le stockage local
       try {
-        const response = await fetch("/api/client", { method: "GET" });
+        const response = await fetch(`${apiUrl}/api/client`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+            'Content-Type': 'application/json',
+          },
+        });
         const data = await response.json();
         if (data && data.success && data.data) {
           setClients(data.data); // Accès aux clients via la propriété data
@@ -113,7 +122,7 @@ const Formulaire = () => {
     console.log(invoiceData);
 
     try {
-      const response = await fetch("/api/invoice", {
+      const response = await fetch(`${apiUrl}/api/invoice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

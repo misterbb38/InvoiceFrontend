@@ -15,17 +15,33 @@ function AddClientForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-
+        const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+        const token = userInfo?.token; // S'assurer d'utiliser le token actuel
+        const userId = userInfo?._id; // Récupérer l'ID de l'utilisateur depuis le stockage local
+    
+        if (!userId) {
+            setToastMessage("Erreur: L'ID de l'utilisateur n'est pas disponible.");
+            setIsSuccess(false);
+            setShowToast(true);
+            return; // Sortir de la fonction si l'ID de l'utilisateur n'est pas trouvé
+        }
+    
         try {
             const response = await fetch(`${apiUrl}/api/client`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
+                    'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ name, address, email, telephone })
+                body: JSON.stringify({ 
+                    user: userId, // Inclure l'ID de l'utilisateur dans la requête
+                    name, 
+                    address, 
+                    email, 
+                    telephone 
+                })
             });
-
+    
             if (response.ok) {
                 setToastMessage("Client ajouté avec succès");
                 setIsSuccess(true);
@@ -34,17 +50,20 @@ function AddClientForm() {
                 setEmail('');
                 setTelephone('');
             } else {
-                setToastMessage("Échec de l'ajout du client");
+                const errorData = await response.json();
+                setToastMessage(errorData.message || "Échec de l'ajout du client");
                 setIsSuccess(false);
             }
         } catch (error) {
-            setToastMessage("Erreur lors de l'envoi du formulaire");
+            setToastMessage("Erreur lors de l'envoi du formulaire : " + error.message);
             setIsSuccess(false);
         }
-
+    
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000); // Cache le toast après 3 secondes
     };
+    
+    
 
     return (
         <>

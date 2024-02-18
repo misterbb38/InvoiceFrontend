@@ -23,7 +23,15 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
     if (showModal) {
       const fetchFactureData = async () => {
         try {
-          const response = await fetch(`${apiUrl}/api/invoice/${factureId}`);
+          const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+          const token = userInfo?.token;
+          const response = await fetch(`${apiUrl}/api/invoice/${factureId}`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+              'Content-Type': 'application/json',
+            },
+          });
           const data = await response.json();
           if (data.success) {
             setFormData({
@@ -102,10 +110,13 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
       try {
-        const response = await fetch(`/api/invoice/${factureId}`, {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        const token = userInfo?.token;
+        const response = await fetch(`${apiUrl}/api/invoice/${factureId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({
             client: {
@@ -116,7 +127,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
             },
             items: formData.items,
             date: formData.date,
-            total: formData.total,
+            
             type: formData.type,
             status: formData.status,
           }),
