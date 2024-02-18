@@ -71,6 +71,8 @@ const Formulaire = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+    const token = userInfo?.token; // S'assurer d'utiliser le token actuel
 
     const clientSelectionne = clients.find(
       (client) => client._id === selectedClientId
@@ -115,6 +117,7 @@ const Formulaire = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(invoiceData),
       });
