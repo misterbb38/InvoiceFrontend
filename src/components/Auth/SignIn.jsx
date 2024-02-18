@@ -52,7 +52,7 @@ const SignIn = () => {
               <p className="2xl:px-20">
                 
               </p>
-              <img className="hidden " src={LogoText} alt="Logo" />
+              <img className="hidden dark:block " src={LogoText} alt="Logo" />
             </div>
           </div>
 
