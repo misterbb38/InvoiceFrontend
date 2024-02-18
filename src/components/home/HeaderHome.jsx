@@ -109,7 +109,7 @@ const HeaderHome = () => {
         </motion.button>
         </Link>
 
-        <Link to="/sign-in" style={{ textDecoration: 'none' }}>
+        <Link to="/signin" style={{ textDecoration: 'none' }}>
         <motion.button
           className="inline-flex items-center btn btn-primary mx-2 px-3 rounded text-base mt-4 md:mt-0"
           variants={buttonVariants}
