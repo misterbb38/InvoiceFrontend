@@ -4,13 +4,17 @@ import GeneratePDFButton from '../components/GeneratePDFButton';
 import FilterFactures from '../components/FactureFilter';
 import DeleteFactureButton from '../components/DeleteFactureButton';
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb';
+import CurrencySelector from '../components/CurrencySelector'; // Importez le nouveau composant
 
-function Devis() {
+function Facture() {
   const [allFactures, setAllFactures] = useState([]);
   const [displayedFactures, setDisplayedFactures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const facturesPerPage = 8;
+  const [currency, setCurrency] = useState('FCFA'); // EUR comme valeur par défaut
+
+  const facturesPerPage = 10;
+
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
    // Fonction pour rafraîchir les factures
@@ -23,12 +27,45 @@ function Devis() {
     fetchFactures();
   }, []);
 
+  // const fetchFactures = async () => {
+  //   try {
+  //     const response = await fetch(`${apiUrl}/api/invoice`);
+  //     const data = await response.json();
+  //     if (data.success) {
+  //       const facturesFiltrees = data.data
+  //         .filter(facture => facture.type === "facture")
+  //         .sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
+  //         console.log(data.data)
+
+  //       setAllFactures(facturesFiltrees);
+  //       setDisplayedFactures(facturesFiltrees);
+  //     }
+  //     setLoading(false);
+  //   } catch (error) {
+  //     console.error("Erreur:", error);
+  //     setLoading(false);
+  //   }
+  // };
   const fetchFactures = async () => {
     try {
-      const response = await fetch(`${apiUrl}/api/invoice`);
+      // Récupérer le token de l'utilisateur stocké localement
+              const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+              const token = userInfo?.token;
+
+      const response = await fetch(`${apiUrl}/api/invoice`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+          'Content-Type': 'application/json',
+        },
+      });
+
       const data = await response.json();
       if (data.success) {
-        const facturesFiltrees = data.data.filter(facture => facture.type === "devis");
+        const facturesFiltrees = data.data
+          .filter(facture => facture.type === "devis")
+          .sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
+
         setAllFactures(facturesFiltrees);
         setDisplayedFactures(facturesFiltrees);
       }
@@ -89,10 +126,13 @@ function Devis() {
 
   return (
     <div className="base-content bg-base-100 mx-auto p-4 min-h-[800px]">
-      <NavigationBreadcrumb pageName="Devis" />
+      <NavigationBreadcrumb pageName="Facture" />
       <div className="divider"></div> 
       {/* <h2 className="text-2xl font-bold mb-4">Factures</h2> */}
       <FilterFactures onFilter={handleFilter} />
+      {/* // Ajout dans le rendu JSX de Facture, là où vous souhaitez que le sélecteur apparaisse */}
+      <CurrencySelector currency={currency} setCurrency={setCurrency} />
+
       <div className="divider"></div> 
       {loading ? (
         <div className="loading loading-spinner text-primary" >Chargement...</div>
@@ -113,13 +153,13 @@ function Devis() {
               <tbody>
                 {currentFactures.map(facture => (
                   <tr key={facture._id}>
-                    <td>{facture.client.name}</td>
+                    <td>{facture.client.name } </td>
                     <td>{new Date(facture.date).toLocaleDateString()}</td>
                     <td>{facture.client.telephone}</td>
-                    <td>{facture.total.toFixed(2)}cfa</td>
+                    <td>{facture.total.toFixed(2)} {currency}</td>
                     <td>{facture.status}</td>
                     <td>
-                      <GeneratePDFButton invoice={facture} currency="FCFA" />
+                      <GeneratePDFButton invoice={facture} currency={currency} />
                       <EditFactureButton factureId={facture._id} onFactureUpdated={refreshFactures} />
                       <DeleteFactureButton factureId={facture._id} onFactureDeleted={refreshFactures}  />
                     </td>
@@ -150,4 +190,4 @@ function Devis() {
   );
 }
 
-export default Devis;
+export default Facture;
