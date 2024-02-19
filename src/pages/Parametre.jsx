@@ -9,11 +9,14 @@ const Parametre = () => {
     email: "",
     telephone: "",
     devise: "",
+    logo: ""
   });
+  const [logo, setLogo] = useState(null); // Pour gérer le fichier image sélectionné
   const [isModified, setIsModified] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
   useEffect(() => {
     // Charger les données utilisateur depuis localStorage au chargement du composant
@@ -24,6 +27,7 @@ const Parametre = () => {
       email: userInfo.email || "",
       telephone: userInfo.telephone || "",
       devise: userInfo.devise || "",
+      logo: userInfo.logo || "", // Initialiser avec le chemin de l'image stockée
     });
   }, []);
 
@@ -32,6 +36,52 @@ const Parametre = () => {
     setUser((prevUser) => ({ ...prevUser, [name]: value }));
     setIsModified(true);
   };
+
+  const handleImageChange = (e) => {
+    setLogo(e.target.files[0]); // Stocker le fichier sélectionné
+    setIsModified(true);
+  };
+
+  const handleSubmitLogo = async (e) => {
+    e.preventDefault();
+    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+    const token = userInfo?.token;
+    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+
+    const formData = new FormData();
+    formData.append("logo", logo);
+
+    try {
+      const response = await fetch(`${apiUrl}/api/user/profile/`, { // Assurez-vous que ce chemin est correct et configuré dans le backend pour gérer l'upload de l'image
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update logo.");
+      }
+
+      const data = await response.json();
+      setUser((prevUser) => ({ ...prevUser, logo: data.logo })); // Mettre à jour l'URL de l'image dans l'état local
+      localStorage.setItem("userInfo", JSON.stringify({ ...userInfo, logo: data.logo })); // Mettre à jour le localStorage
+      setIsSuccess(true);
+      setToastMessage("Logo mis à jour avec succès !!");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+      console.log(data)
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du logo :", error);
+      setIsSuccess(false);
+      setToastMessage("Erreur lors de la mise à jour du logo.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    }
+  };
+
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -188,23 +238,16 @@ const Parametre = () => {
                 <h3 className="font-medium base-content">Your Photo</h3>
               </div>
               <div className="p-7">
-                <form action="#">
+                <form   onSubmit={handleSubmitLogo} action="#">
                   <div className="mb-4 flex items-center gap-3">
                     <div className="h-14 w-14 rounded-full">
-                      <img src={userThree} alt="User" />
+                    <img src={`${apiUrl}/${user.logo.replace(/\\/g, '/')}` || userThree} alt="User" />
                     </div>
                     <div>
                       <span className="mb-1.5 base-content">
-                        Edit your photo
+                        Editer votre logo
                       </span>
-                      <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
-                          Delete
-                        </button>
-                        <button className="text-sm hover:text-primary">
-                          Update
-                        </button>
-                      </span>
+                      
                     </div>
                   </div>
 
@@ -216,6 +259,7 @@ const Parametre = () => {
                       type="file"
                       accept="image/*"
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                      onChange={handleImageChange}
                     />
                     <div className="flex flex-col items-center justify-center space-y-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-base-100 dark:border-strokedark dark:bg-boxdark">
@@ -260,13 +304,14 @@ const Parametre = () => {
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium base-content hover:shadow-1 dark:border-strokedark "
                       type="submit"
                     >
-                      Cancel
+                      Annuller
                     </button>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                       type="submit"
+                      
                     >
-                      Save
+                      Enregistrer
                     </button>
                   </div>
                 </form>

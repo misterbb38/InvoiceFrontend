@@ -1,14 +1,39 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { FiMenu, FiChevronLeft, FiSearch, FiBell, FiSettings } from "react-icons/fi";
 import UserPhoto from "../assets/icone/react.svg";
 import { useNavigate } from "react-router-dom"; // Importer useNavigate
+
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
 
 function TopBar({ toggleSidebar, isSidebarOpen }) {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const navigate = useNavigate(); // Hook pour naviguer
+
+  const [user, setUser] = useState({
+    nom: "",
+    prenom: "",
+    email: "",
+    telephone: "",
+    devise: "",
+    logo: ""
+  });
+
+  useEffect(() => {
+    // Charger les données utilisateur depuis localStorage au chargement du composant
+    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+    setUser({
+      nom: userInfo.nom || "",
+      prenom: userInfo.prenom || "",
+      email: userInfo.email || "",
+      telephone: userInfo.telephone || "",
+      devise: userInfo.devise || "",
+      logo: userInfo.logo || "", // Initialiser avec le chemin de l'image stockée
+      nomEntreprise: userInfo.nomEntreprise || "",
+    });
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear(); // Vide localStorage
@@ -71,7 +96,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
                 
                 className="block px-4 py-2 text-sm text-base-content hover:bg-base-200"
               >
-                
+
                 Déconnexion
               </a>
             </div>
@@ -98,13 +123,13 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
     <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="luxury" value="luxury"/></li>
   </ul>
 </div>
-          <img src={UserPhoto} alt="User" className="h-8 w-8 rounded-full" />
+          <img src={`${apiUrl}/${user.logo.replace(/\\/g, '/')}` || UserPhoto} alt="User" className="h-8 w-8 rounded-full" />
           <div className="ml-2">
 
           
 
-            <div className="text-base-content">Thomas Anree</div>
-            <div className="text-xs text-base-content">UX Designer</div>
+            <div className="text-base-content">{user.nom}</div>
+            <div className="text-xs text-base-content">{user.nomEntreprise}</div>
           </div>
         </div>
       </div>
