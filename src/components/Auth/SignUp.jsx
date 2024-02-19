@@ -11,6 +11,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
+    const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
 
     const navigate = useNavigate(); // Pour rediriger l'utilisateur après l'inscription
     const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
@@ -21,7 +22,7 @@ const SignUp = () => {
 
 const submitHandler = async (e) => {
     e.preventDefault();
-
+    setLoading(true); // Début du chargement
     // Vous pouvez ajouter plus de validations ici, par exemple vérifier si les mots de passe correspondent
     if (password !== confirmPassword) {
         setPasswordError(true);
@@ -49,6 +50,8 @@ const submitHandler = async (e) => {
         }
     } catch (error) {
         alert(error.message);
+    }finally {
+      setLoading(false); // Arrêt du chargement
     }
 };
 
@@ -273,13 +276,20 @@ const submitHandler = async (e) => {
                
 
                 <div className="mb-5">
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <span className="loading loading-spinner text-primary"></span>
+                  </div>
+                ) : (
                   <input
                     type="submit"
-                    value="Create account"
+                    value="S'inscrire"
                     disabled={password !== confirmPassword}
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
                   />
+                  )}
                 </div>
+                
 
                 {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
@@ -320,9 +330,9 @@ const submitHandler = async (e) => {
 
                 <div className="mt-6 text-center">
                   <p>
-                    Already have an account?{' '}
+                    Vous avez déjà un compte ?{' '}
                     <Link to="/signin" className="text-primary">
-                      Sign in
+                      Se connecter
                     </Link>
                   </p>
                 </div>

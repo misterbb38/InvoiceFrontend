@@ -7,13 +7,14 @@ const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
   const navigate = useNavigate();
 
 
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true); // Début du chargement
     try {
       const response = await fetch(`${apiUrl}/api/user/login`, {
         method: 'POST',
@@ -36,6 +37,8 @@ const SignIn = () => {
       navigate('/dash');
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoading(false); // Arrêt du chargement
     }
   };
 
@@ -93,16 +96,22 @@ const SignIn = () => {
 
                 {error && <div className="mb-4 text-red-500">{error}</div>}
 
-                <input
-                  type="submit"
-                  value="Se connecter"
-                  className="btn btn-primary w-full"
-                />
+                {loading ? (
+                  <div className="flex justify-center items-center">
+                    <span className="loading loading-spinner text-primary"></span>
+                  </div>
+                ) : (
+                  <input
+                    type="submit"
+                    value="Se connecter"
+                    className="btn btn-primary w-full"
+                  />
+                )}
                <div className="mt-6 text-center">
                   <p>
-                    Don’t have any account?{' '}
+                    Vous n'avez pas de compte ?{' '}
                     <Link to="/signup" className="text-primary">
-                      Sign Up
+                      S'inscrire
                     </Link>
                   </p>
                 </div>

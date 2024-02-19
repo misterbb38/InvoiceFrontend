@@ -1,9 +1,36 @@
+import { useState, useEffect } from 'react';
 import jsPDF from 'jspdf';
 import PropTypes from 'prop-types';
 import logoLeft from '../images/logo1.png';
 import logoRight from '../images/logo2.png';
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
 function GeneratePDFButton({ invoice, currency }) {
+    const [user, setUser] = useState({
+        nom: "",
+        prenom: "",
+        email: "",
+        telephone: "",
+        devise: "",
+        logo: ""
+      });
+    
+      useEffect(() => {
+        // Charger les données utilisateur depuis localStorage au chargement du composant
+        const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+        setUser({
+          nom: userInfo.nom || "",
+          prenom: userInfo.prenom || "",
+          email: userInfo.email || "",
+          telephone: userInfo.telephone || "",
+          devise: userInfo.devise || "",
+          logo: userInfo.logo || "", // Initialiser avec le chemin de l'image stockée
+          nomEntreprise: userInfo.nomEntreprise || "",
+          couleur: userInfo.couleur || ""
+        });
+      }, []);
+    
+
     const generatePDF = () => {
         const doc = new jsPDF();
 
@@ -23,14 +50,14 @@ function GeneratePDFButton({ invoice, currency }) {
 
         // Ajout des logos et du texte central
         const imgLeft = new Image();
-        imgLeft.src = logoLeft;
+        imgLeft.src = `${apiUrl}/${user.logo.replace(/\\/g, '/')}` || logoLeft;
         const imgRight = new Image();
         imgRight.src = logoRight;
         doc.addImage(imgLeft, 'PNG', 20, 5, 30, 30);
         // doc.addImage(imgRight, 'PNG', 140, 5, 60, 30);
         doc.setFont("helvetica", "bold");
-        doc.text("Traduction & Interprétation ", 140, 20);
-        doc.text("Anglais <> Français <> Portugais ", 140, 25);
+        // doc.text("Traduction & Interprétation ", 140, 20);
+        // doc.text("Anglais <> Français <> Portugais ", 140, 25);
         doc.setFontSize(14);
         doc.text("", 105, 30, null, null, "center");
 
@@ -103,39 +130,39 @@ function GeneratePDFButton({ invoice, currency }) {
         doc.text(`MONTANT TOTAL HT: ${invoice.total.toFixed(2)} ${currency}`, 120, currentY);
 
         // Informations bancaires
-        currentY += 20; // Espace avant les informations bancaires
-        const bankInfo = [
-            "COORDONNEES BANCAIRES", "SOCIETE GENERALE", "RELEVE D'IDENTITE BANCAIRE",
-            "Titulaire du compte: 01600 POMPIDOU", "Domiciliation: XOF",
-            "Code agence: SN011 01016 004000 334878 23", "Devise du compte: SN08 SN011 01016 004000 334878 23",
-            "RIB: SGSNSNDAXXX", "IBAN: 0", "BIC-SWIFT: 0"
-        ];
-        bankInfo.forEach((line, index) => {
-          if (currentY > 270) { // Vérification avant chaque ligne pour les informations bancaires
-              doc.addPage();
-              currentY = 20;
-              addFooter();
-          }
+    //     currentY += 20; // Espace avant les informations bancaires
+    //     const bankInfo = [
+    //         "COORDONNEES BANCAIRES", "SOCIETE GENERALE", "RELEVE D'IDENTITE BANCAIRE",
+    //         "Titulaire du compte: 01600 POMPIDOU", "Domiciliation: XOF",
+    //         "Code agence: SN011 01016 004000 334878 23", "Devise du compte: SN08 SN011 01016 004000 334878 23",
+    //         "RIB: SGSNSNDAXXX", "IBAN: 0", "BIC-SWIFT: 0"
+    //     ];
+    //     bankInfo.forEach((line, index) => {
+    //       if (currentY > 270) { // Vérification avant chaque ligne pour les informations bancaires
+    //           doc.addPage();
+    //           currentY = 20;
+    //           addFooter();
+    //       }
           
-          // Réduire la longueur du rectangle et ajuster la taille de l'écriture
-          const rectLength = 70; // Nouvelle longueur du rectangle, ajustez selon les besoins
-          const fontSize = 8; // Nouvelle taille de l'écriture, ajustez selon les besoins
+    //       // Réduire la longueur du rectangle et ajuster la taille de l'écriture
+    //       const rectLength = 70; // Nouvelle longueur du rectangle, ajustez selon les besoins
+    //       const fontSize = 8; // Nouvelle taille de l'écriture, ajustez selon les besoins
           
-          if (index === 0) {
-              doc.setFillColor(0, 100, 0);
-              doc.rect(20, currentY, rectLength, 5, 'F');
-              doc.setFontSize(fontSize);
-          } else {
-              doc.setFillColor(0, 128, 0);
-              doc.rect(20, currentY, rectLength, 5, 'F');
-              doc.setFontSize(fontSize);
-          }
+    //       if (index === 0) {
+    //           doc.setFillColor(0, 100, 0);
+    //           doc.rect(20, currentY, rectLength, 5, 'F');
+    //           doc.setFontSize(fontSize);
+    //       } else {
+    //           doc.setFillColor(0, 128, 0);
+    //           doc.rect(20, currentY, rectLength, 5, 'F');
+    //           doc.setFontSize(fontSize);
+    //       }
           
-          doc.setTextColor(255, 255, 255);
-          // Assurez-vous que le texte est bien aligné à l'intérieur du rectangle plus petit
-          doc.text(line, 22, currentY + 3);
-          currentY += 5;
-      });
+    //       doc.setTextColor(255, 255, 255);
+    //       // Assurez-vous que le texte est bien aligné à l'intérieur du rectangle plus petit
+    //       doc.text(line, 22, currentY + 3);
+    //       currentY += 5;
+    //   });
       
 
         // Dernière ligne verte
