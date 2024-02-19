@@ -5,27 +5,19 @@ function AddClientForm() {
     const [address, setAddress] = useState('');
     const [email, setEmail] = useState('');
     const [telephone, setTelephone] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // État pour le chargement
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(true);
    
-     // Assurez-vous que votre variable d'environnement est définie dans votre fichier .env
-    // Exemple: REACT_APP_API_BASE_URL=https://invoice-api-app.onrender.com
     const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true); // Commencer le chargement
         const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
-        const token = userInfo?.token; // S'assurer d'utiliser le token actuel
-        const userId = userInfo?._id; // Récupérer l'ID de l'utilisateur depuis le stockage local
-    
-        if (!userId) {
-            setToastMessage("Erreur: L'ID de l'utilisateur n'est pas disponible.");
-            setIsSuccess(false);
-            setShowToast(true);
-            return; // Sortir de la fonction si l'ID de l'utilisateur n'est pas trouvé
-        }
-    
+        const token = userInfo?.token;
+
         try {
             const response = await fetch(`${apiUrl}/api/client`, {
                 method: 'POST',
@@ -33,15 +25,9 @@ function AddClientForm() {
                     "Content-Type": "application/json",
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ 
-                    user: userId, // Inclure l'ID de l'utilisateur dans la requête
-                    name, 
-                    address, 
-                    email, 
-                    telephone 
-                })
+                body: JSON.stringify({ name, address, email, telephone })
             });
-    
+
             if (response.ok) {
                 setToastMessage("Client ajouté avec succès");
                 setIsSuccess(true);
@@ -57,13 +43,12 @@ function AddClientForm() {
         } catch (error) {
             setToastMessage("Erreur lors de l'envoi du formulaire : " + error.message);
             setIsSuccess(false);
+        } finally {
+            setIsLoading(false); // Arrêter le chargement une fois la requête terminée
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3000);
         }
-    
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000); // Cache le toast après 3 secondes
     };
-    
-    
 
     return (
         <>
@@ -114,6 +99,8 @@ function AddClientForm() {
                         className='w-80 mt-2 rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary'
                     />
                 </div>
+                {isLoading && <div className="flex justify-center items-center"><span className="loading loading-spinner text-primary"></span></div>}
+                
                 <button type="submit" className='mt-2 mb-2 btn btn-primary'>Ajouter le client</button>
             </form>
         </>

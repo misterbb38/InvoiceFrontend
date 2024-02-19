@@ -59,14 +59,9 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
           />
           {isSettingsMenuOpen && (
             <div className="absolute right-0 mt-2 py-2 w-48 bg-base-100 rounded-md shadow-xl z-50">
+              
               <a
-                href="/profil"
-                className="block px-4 py-2 text-sm text-base-content hover:bg-base-200"
-              >
-                Mon Profil
-              </a>
-              <a
-                href="/Parametre"
+                href="/dash/Parametre"
                 className="block px-4 py-2 text-sm text-base-content hover:bg-base-200"
               >
                 Réglages
@@ -76,6 +71,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
                 
                 className="block px-4 py-2 text-sm text-base-content hover:bg-base-200"
               >
+                
                 Déconnexion
               </a>
             </div>
