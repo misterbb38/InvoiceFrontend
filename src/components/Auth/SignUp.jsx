@@ -11,6 +11,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordError, setPasswordError] = useState(false);
+     const [serverError, setServerError] = useState(''); // Ajout d'un état pour l'erreur serveur
     const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
 
     const navigate = useNavigate(); // Pour rediriger l'utilisateur après l'inscription
@@ -20,40 +21,43 @@ const SignUp = () => {
         setPasswordError(password !== confirmPassword && confirmPassword.length > 0);
     }, [password, confirmPassword]);
 
-const submitHandler = async (e) => {
-    e.preventDefault();
-    setLoading(true); // Début du chargement
-    // Vous pouvez ajouter plus de validations ici, par exemple vérifier si les mots de passe correspondent
-    if (password !== confirmPassword) {
-        setPasswordError(true);
-    } else {
-        setPasswordError(false);
-        // Soumettre le formulaire ici
-    }
+    const submitHandler = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+      setServerError('');
 
-    try {
-        const response = await fetch(`${apiUrl}/api/user/signup`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ nom, prenom, email, password}),
-        });
+      if (password !== confirmPassword) {
+          setPasswordError(true);
+          setLoading(false);
+          return;
+      }
 
-        const data = await response.json();
+      try {
+          const response = await fetch(`${apiUrl}/api/user/signup`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ nom, prenom, email, password }),
+          });
 
-        if (response.ok) {
-            console.log('Inscription réussie', data);
-            navigate('/'); // Rediriger vers la page de connexion
-        } else {
-            throw new Error(data.message || "Une erreur s'est produite lors de l'inscription");
-        }
-    } catch (error) {
-        alert(error.message);
-    }finally {
-      setLoading(false); // Arrêt du chargement
-    }
-};
+          const data = await response.json(); // Toujours lire le JSON pour obtenir le message d'erreur potentiel
+
+          if (!response.ok) {
+              // Si la requête a échoué, utilise le message d'erreur du JSON
+              setServerError(data.message || "Une erreur s'est produite lors de l'inscription");
+          } else {
+              console.log('Inscription réussie', data);
+              navigate('/'); // Rediriger vers la page de connexion
+          }
+      } catch (error) {
+          // Gérer les erreurs qui ne sont pas liées à la réponse HTTP, comme les problèmes de réseau
+          setServerError("Problème de connexion au serveur.");
+      } finally {
+          setLoading(false);
+      }
+  };
+
 
   return (
     <>
@@ -289,6 +293,11 @@ const submitHandler = async (e) => {
                   />
                   )}
                 </div>
+                {serverError && (
+                <div style={{ color: 'red', marginTop: '10px' }}>
+                    {serverError} {/* Affichage de l'erreur serveur */}
+                </div>
+            )}
                 
 
                 {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">

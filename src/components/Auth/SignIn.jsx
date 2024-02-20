@@ -18,27 +18,32 @@ const SignIn = () => {
     try {
       const response = await fetch(`${apiUrl}/api/user/login`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Échec de la connexion. Veuillez vérifier vos identifiants.');
       }
-
+  
       const data = await response.json();
-
-      // Utiliser localStorage pour stocker les informations de l'utilisateur
+      setLoading(false); // Arrêt du chargement
+  
+      // Stocker les infos de l'utilisateur et le token dans localStorage
       localStorage.setItem('userInfo', JSON.stringify(data));
-
-      // Rediriger vers /dash
-      navigate('/dash');
+  
+      // Rediriger en fonction du type de l'utilisateur et de l'état de la clé d'accès
+      if (data.userType === 'simple' && data.cleValide) {
+        navigate('/dash');
+      } else if (data.userType === 'superadmin') {
+        navigate('/keyGen');
+      } else if (!data.cleValide) {
+        navigate('/key'); // Page indiquant que la clé est expirée
+      }
     } catch (error) {
       setError(error.message);
     } finally {
-      setLoading(false); // Arrêt du chargement
+      setLoading(false); // Fin du chargement
     }
   };
 
@@ -109,9 +114,9 @@ const SignIn = () => {
                 )}
                <div className="mt-6 text-center">
                   <p>
-                    Vous n'avez pas de compte ?{' '}
+                    Vous n avez pas de compte ?{' '}
                     <Link to="/signup" className="text-primary">
-                      S'inscrire
+                      inscription
                     </Link>
                   </p>
                 </div>
