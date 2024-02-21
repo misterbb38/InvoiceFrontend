@@ -5,23 +5,23 @@ import LogoText from '../../images/logo-et-slogan.jpg';
 // import Logo from '../../images/logo/logo.svg';
 
 const SignUp = () => {
-    const [nom, setNom] = useState('');
-    const [prenom, setPrenom] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [passwordError, setPasswordError] = useState(false);
-     const [serverError, setServerError] = useState(''); // Ajout d'un état pour l'erreur serveur
-    const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
+  const [nom, setNom] = useState('');
+  const [prenom, setPrenom] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const [serverError, setServerError] = useState(''); // Ajout d'un état pour l'erreur serveur
+  const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
 
-    const navigate = useNavigate(); // Pour rediriger l'utilisateur après l'inscription
-    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+  const navigate = useNavigate(); // Pour rediriger l'utilisateur après l'inscription
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
-    useEffect(() => {
-        setPasswordError(password !== confirmPassword && confirmPassword.length > 0);
-    }, [password, confirmPassword]);
+  useEffect(() => {
+      setPasswordError(password !== confirmPassword && confirmPassword.length > 0);
+  }, [password, confirmPassword]);
 
-    const submitHandler = async (e) => {
+  const submitHandler = async (e) => {
       e.preventDefault();
       setLoading(true);
       setServerError('');
@@ -47,8 +47,11 @@ const SignUp = () => {
               // Si la requête a échoué, utilise le message d'erreur du JSON
               setServerError(data.message || "Une erreur s'est produite lors de l'inscription");
           } else {
+              // Stocker les informations de l'utilisateur dans localStorage
+              localStorage.setItem('userInfo', JSON.stringify(data));
+
               console.log('Inscription réussie', data);
-              navigate('/'); // Rediriger vers la page de connexion
+              navigate('/signin'); // Rediriger automatiquement l'utilisateur vers le tableau de bord
           }
       } catch (error) {
           // Gérer les erreurs qui ne sont pas liées à la réponse HTTP, comme les problèmes de réseau
@@ -57,6 +60,7 @@ const SignUp = () => {
           setLoading(false);
       }
   };
+
 
 
   return (

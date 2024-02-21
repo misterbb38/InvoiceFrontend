@@ -15,6 +15,7 @@ import Parametre from './pages/Parametre';
 import Home from './pages/home';
 import GenerateAccessKey from './components/GenerateAccessKey';
 import KeyExpired from './components/KeyExpired';
+import Notifications from './components/Notifications';
 
 
 function AppLayout() {
@@ -54,6 +55,7 @@ function App() {
             <Route path="Devis" element={<Devis />} />
             <Route path="Formulaire" element={<Formulaire />} />
             <Route path="instruction" element={<Instruction />} />
+            <Route path='notification' element={<Notifications />} />
             <Route path="parametre" element={<Parametre />} />
           </Route>
         </Route>

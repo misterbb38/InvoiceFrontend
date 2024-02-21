@@ -33,7 +33,7 @@ const SignIn = () => {
       localStorage.setItem('userInfo', JSON.stringify(data));
   
       // Rediriger en fonction du type de l'utilisateur et de l'état de la clé d'accès
-      if (data.userType === 'simple' && data.cleValide) {
+      if (data.userType === 'simple' && data.accessKeyToken) {
         navigate('/dash');
       } else if (data.userType === 'superadmin') {
         navigate('/keyGen');

@@ -6,10 +6,11 @@ import { useNavigate } from "react-router-dom"; // Importer useNavigate
 
 const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
-
 function TopBar({ toggleSidebar, isSidebarOpen }) {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+ 
+  const [unreadCount, setUnreadCount] = useState(0);
+ 
   const navigate = useNavigate(); // Hook pour naviguer
 
   const [user, setUser] = useState({
@@ -18,7 +19,8 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
     email: "",
     telephone: "",
     devise: "",
-    logo: ""
+    logo: "",
+    token: "",
   });
 
   useEffect(() => {
@@ -32,8 +34,40 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
       devise: userInfo.devise || "",
       logo: userInfo.logo || "", // Initialiser avec le chemin de l'image stockée
       nomEntreprise: userInfo.nomEntreprise || "",
+      token : userInfo?.token,
+      userId : userInfo?._id
     });
   }, []);
+  
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+    const token = userInfo?.token;
+    const userId = userInfo?._id;
+
+    // Fetch pour récupérer les notifications
+    const fetchNotifications = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/notification/${userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (response.ok) {
+          const { notifications } = await response.json();
+          const unreadNotifications = notifications.filter(notification => !notification.read).length;
+          setUnreadCount(unreadNotifications);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des notifications", error);
+      }
+    };
+
+    fetchNotifications();
+  }, [apiUrl]);
+
+ 
 
   const handleLogout = () => {
     localStorage.clear(); // Vide localStorage
@@ -58,23 +92,18 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
       </div>
 
       <div className="flex items-center">
-        <div className="relative mx-4">
-          <FiBell
-            className="cursor-pointer text-base-content"
-            size={24}
-            onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-          />
-          {isNotificationsOpen && (
-            <div className="absolute right-0 mt-2 py-2 w-48 bg-base-100 rounded-md shadow-xl z-50">
-              <div className="block px-4 py-2 text-sm text-base-content hover:bg-base-200">
-                Notification 1
-              </div>
-              <div className="block px-4 py-2 text-sm text-base-content hover:bg-base-200">
-                Notification 2
-              </div>
-            </div>
-          )}
-        </div>
+      <div className="relative mx-4 indicator">
+  <FiBell
+    className="cursor-pointer text-base-content"
+    size={24}
+    onClick={() => navigate("/notification")} // Naviguez vers la page de notifications au clic
+  />
+  {/* {unreadCount > 0 && (
+    <span className="indicator-item badge badge-secondary">{unreadCount}</span>
+  )} */}
+  <span className="indicator-item badge badge-secondary">{unreadCount}</span>
+</div>
+
 
         <div className="relative mx-4">
           <FiSettings

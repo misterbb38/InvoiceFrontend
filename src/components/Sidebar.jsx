@@ -21,7 +21,8 @@ function Sidebar() {
     { id: 3, label: 'Devis', route: '/dash/Devis', icon: faFileAlt },
     { id: 4, label: 'Formulaire', route: '/dash/Formulaire', icon: faClipboardList },
     { id: 5, label: 'Instruction', route: '/dash/instruction', icon: faBook },
-    { id: 6, label: 'Parametre', route: '/dash/parametre', icon: faCog },
+    { id: 6, label: 'Message', route: '/dash/notification', icon: faCog },
+    { id: 7, label: 'Parametre', route: '/dash/parametre', icon: faCog },
   ];
 
   const handleMenuItemClick = (id) => {
