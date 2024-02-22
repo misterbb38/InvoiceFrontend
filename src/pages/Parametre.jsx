@@ -121,7 +121,7 @@ const Parametre = () => {
 
   return (
     <>
-      <div className="bg-base-100">
+      <div className="bg-base-100 min-h-[800px]">
         <NavigationBreadcrumb pageName="Settings" />
         <div className="bg-base-100 base-content grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">

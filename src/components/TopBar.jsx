@@ -10,7 +10,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
  
   const [unreadCount, setUnreadCount] = useState(0);
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   // const [loading, setLoading] = useState(true);
  
   const navigate = useNavigate(); // Hook pour naviguer
@@ -63,21 +63,25 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
         const data = await response.json();
         setUnreadCount(data.unreadCount);
       } catch (error) {
-        setError(error.message);
-      } finally {
-        // setLoading(false);
+        console.error("Erreur lors de la récupération du nombre de notifications non lues: ", error.message);
       }
     };
 
-    if (token) {
+    const handleUpdateUnreadCount = () => {
       fetchUnreadNotificationsCount();
-    }
+    };
+
+    // Ajouter l'écouteur d'événements
+    document.addEventListener('updateUnreadNotificationsCount', handleUpdateUnreadCount);
+
+    // Initial fetch
+    fetchUnreadNotificationsCount();
+
+    // Nettoyage de l'écouteur d'événements
+    return () => {
+      document.removeEventListener('updateUnreadNotificationsCount', handleUpdateUnreadCount);
+    };
   }, []);
-
-  // if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-
- 
 
   const handleLogout = () => {
     localStorage.clear(); // Vide localStorage
@@ -111,7 +115,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
   {/* {unreadCount > 0 && (
     <span className="indicator-item badge badge-secondary">{unreadCount}</span>
   )} */}
-  <span className="indicator-item badge badge-secondary">{unreadCount}</span>
+  <span className="indicator-item badge badge-primary">{unreadCount}</span>
 </div>
 
 

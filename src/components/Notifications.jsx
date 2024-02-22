@@ -9,31 +9,30 @@ function Notifications() {
   const token = userInfo?.token;
   const userId = userInfo?._id;
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await fetch(`${apiUrl}/api/notification/${userId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setNotifications(data); // Assurez-vous d'adapter cette ligne si nécessaire
-          // Mise à jour du compteur de notifications non lues
-          const unread = data.filter(notification => !notification.read).length;
-          setUnreadCount(unread);
-        } else {
-          throw new Error('Failed to fetch notifications');
-        }
-      } catch (error) {
-        console.error("Erreur lors de la récupération des notifications: ", error);
+  const fetchNotifications = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/api/notification/${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setNotifications(data);
+        const unread = data.filter(notification => !notification.read).length;
+        setUnreadCount(unread);
+      } else {
+        throw new Error('Failed to fetch notifications');
       }
-    };
+    } catch (error) {
+      console.error("Erreur lors de la récupération des notifications: ", error);
+    }
+  };
 
+  useEffect(() => {
     fetchNotifications();
-  }, [userId, apiUrl, token]);
+  }, [userId, apiUrl, token]); // Dépendances de l'effet
 
   const markNotification = async (notificationId, readStatus) => {
     try {
@@ -46,14 +45,9 @@ function Notifications() {
         body: JSON.stringify({ read: readStatus }),
       });
       if (response.ok) {
-        setNotifications(notifications.map(notification => {
-          if (notification._id === notificationId) {
-            return { ...notification, read: readStatus };
-          }
-          return notification;
-        }));
-        // Mise à jour du compteur après modification de l'état de lecture
-        setUnreadCount(readStatus ? unreadCount - 1 : unreadCount + 1);
+        document.dispatchEvent(new CustomEvent('updateUnreadNotificationsCount'));
+        // Rafraîchir les notifications après la mise à jour
+        fetchNotifications();
       } else {
         throw new Error('Failed to update notification status');
       }
@@ -63,7 +57,7 @@ function Notifications() {
   };
 
   return (
-    <div className="bg-base-100 p-4">
+    <div className="bg-base-100 p-4 min-h-[800px]">
       <h3 className="text-lg font-semibold mb-4">Notifications</h3>
        <p>Vous avez {unreadCount} notification(s) non lue(s).</p>
       <div className="overflow-x-auto">
@@ -84,7 +78,7 @@ function Notifications() {
                 <td>{notification.read ? 'Lu' : 'Non lu'}</td>
                 <td>
                   <button 
-                    className={`btn ${notification.read ? 'btn-error' : 'btn-success'} btn-xs`}
+                    className={`btn ${notification.read ? 'btn-error' : 'btn-primary'} btn-xs`}
                     onClick={() => markNotification(notification._id, !notification.read)}
                   >
                     {notification.read ? 'Marquer comme non lu' : 'Marquer comme lu'}
