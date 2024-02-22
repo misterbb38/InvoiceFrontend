@@ -18,7 +18,7 @@ function Facture() {
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
    // Fonction pour rafraîchir les factures
-   const refreshFactures = async () => {
+  const refreshFactures = async () => {
     setLoading(true);
     await fetchFactures();
   };

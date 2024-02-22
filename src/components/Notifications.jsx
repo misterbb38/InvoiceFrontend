@@ -65,7 +65,7 @@ function Notifications() {
   return (
     <div className="bg-base-100 p-4">
       <h3 className="text-lg font-semibold mb-4">Notifications</h3>
-      <p>Vous avez {unreadCount} notification(s) non lue(s).</p>
+       <p>Vous avez {unreadCount} notification(s) non lue(s).</p>
       <div className="overflow-x-auto">
         <table className="table w-full">
           <thead>

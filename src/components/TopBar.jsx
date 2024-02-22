@@ -10,6 +10,8 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
  
   const [unreadCount, setUnreadCount] = useState(0);
+  const [error, setError] = useState('');
+  // const [loading, setLoading] = useState(true);
  
   const navigate = useNavigate(); // Hook pour naviguer
 
@@ -40,32 +42,40 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
   }, []);
   
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
     const token = userInfo?.token;
-    const userId = userInfo?._id;
 
-    // Fetch pour récupérer les notifications
-    const fetchNotifications = async () => {
+    const fetchUnreadNotificationsCount = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/notification/${userId}`, {
+        const response = await fetch(`${apiUrl}/api/notification/countUnread`, {
+          method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
         });
 
-        if (response.ok) {
-          const { notifications } = await response.json();
-          const unreadNotifications = notifications.filter(notification => !notification.read).length;
-          setUnreadCount(unreadNotifications);
+        if (!response.ok) {
+          throw new Error('Failed to fetch unread notifications count');
         }
+
+        const data = await response.json();
+        setUnreadCount(data.unreadCount);
       } catch (error) {
-        console.error("Erreur lors de la récupération des notifications", error);
+        setError(error.message);
+      } finally {
+        // setLoading(false);
       }
     };
 
-    fetchNotifications();
-  }, [apiUrl]);
+    if (token) {
+      fetchUnreadNotificationsCount();
+    }
+  }, []);
+
+  // if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
  
 
@@ -96,7 +106,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
   <FiBell
     className="cursor-pointer text-base-content"
     size={24}
-    onClick={() => navigate("/notification")} // Naviguez vers la page de notifications au clic
+    onClick={() => navigate("/dash/notification")} // Naviguez vers la page de notifications au clic
   />
   {/* {unreadCount > 0 && (
     <span className="indicator-item badge badge-secondary">{unreadCount}</span>
