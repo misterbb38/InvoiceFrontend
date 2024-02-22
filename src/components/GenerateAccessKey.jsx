@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import PaymentButton from './ButtonPayement';
+import TopBar from './TopBar';
+//import PaymentButton from './ButtonPayement';
 
 function GenerateAccessKey() {
   const [users, setUsers] = useState([]);
@@ -76,8 +77,14 @@ function GenerateAccessKey() {
 
 
   return (
+    <>
+    <div>
+        <TopBar/>
+    </div>
     <div className="max-w-4xl mx-auto my-10 p-5 bg-white rounded-lg shadow">
-        <PaymentButton />
+
+        
+         {/* <PaymentButton />  */}
       {toast.message && (
         <div className={`toast toast-top toast-center ${toast.type === 'success' ? 'bg-green-100' : 'bg-red-100'} p-4 rounded`}>
           <span>{toast.message}</span>
@@ -153,6 +160,7 @@ function GenerateAccessKey() {
         </table>
       </div>
     </div>
+    </>
   );
 }
 

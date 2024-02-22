@@ -31,14 +31,17 @@ const SignIn = () => {
   
       // Stocker les infos de l'utilisateur et le token dans localStorage
       localStorage.setItem('userInfo', JSON.stringify(data));
+      console.log(data)
   
-      // Rediriger en fonction du type de l'utilisateur et de l'état de la clé d'accès
-      if (data.userType === 'simple' && data.accessKeyToken) {
+      const currentDate = new Date();
+      const expirationDate = new Date(data.dateExpiration);
+      
+      if (data.userType === 'simple' && currentDate <= expirationDate) {
         navigate('/dash');
-      } else if (data.userType === 'superadmin') {
-        navigate('/keyGen');
-      } else if (!data.cleValide) {
-        navigate('/key'); // Page indiquant que la clé est expirée
+      } else if (data.userType === 'simple' && currentDate > expirationDate) {
+        navigate('/key');
+      } else {
+        navigate('/KeyGen');
       }
     } catch (error) {
       setError(error.message);
