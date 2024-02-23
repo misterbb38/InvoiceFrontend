@@ -73,7 +73,7 @@ const SignUp = () => {
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link> */}
-              <h3><span className="text-blue-700 font-bold">Factu</span><span className="text-orange-500 font-bold">Flex</span></h3>
+              <h3><span className="text-blue-700 font-bold">Factu</span><span className="text-orange-500 font-bold">Flexe</span></h3>
               <p className="2xl:px-20">
               Simplifiez votre gestion de factures avec FactuFlex : inscrivez-vous et découvrez la liberté financière !
               </p>

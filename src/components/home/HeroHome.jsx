@@ -35,11 +35,11 @@ const HeroHome = () => {
           whileInView="onscreen"
           viewport={{ once: true, amount: 0.5 }}>
           <motion.h1 variants={textVariants} className="title-font sm:text-4xl text-3xl mb-4 font-medium text-base-content  ">
-          FactuFlex : Simplifiez votre Gestion Financière
+          FactuFlexe : Simplifiez votre Gestion Financière
             <br className="hidden lg:inline-block"/>Efficacité et Flexibilité
           </motion.h1>
           <motion.p variants={textVariants} className="mb-8 leading-relaxed">
-          Découvrez FactuFlex, la solution ultime pour transformer votre gestion de factures et devis en une expérience fluide et sans effort. Grâce à notre inventaire filtrable par mois, année, et client, vous avez le contrôle total sur votre suivi financier. Générez des factures en PDF d'un simple clic et propulsez votre entreprise vers de nouveaux sommets d'efficacité. Rejoignez FactuFlex dès aujourd'hui et voyez comment nous redéfinissons la gestion financière pour les entrepreneurs modernes.
+          Découvrez FactuFlexe, la solution ultime pour transformer votre gestion de factures et devis en une expérience fluide et sans effort. Grâce à notre inventaire filtrable par mois, année, et client, vous avez le contrôle total sur votre suivi financier. Générez des factures en PDF d'un simple clic et propulsez votre entreprise vers de nouveaux sommets d'efficacité. Rejoignez FactuFlex dès aujourd'hui et voyez comment nous redéfinissons la gestion financière pour les entrepreneurs modernes.
           </motion.p>
           <div className="flex justify-center">
           <Link to="/signup" style={{ textDecoration: 'none' }}>

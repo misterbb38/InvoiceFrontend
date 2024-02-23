@@ -3,46 +3,104 @@ import jsPDF from 'jspdf';
 import PropTypes from 'prop-types';
 import logoLeft from '../images/logo1.png';
 import logoRight from '../images/logo2.png';
-const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+
 
 function GeneratePDFButton({ invoice, currency }) {
     const [user, setUser] = useState({
         nom: "",
         prenom: "",
+        adresse: "",
         email: "",
         telephone: "",
         devise: "",
         logo: ""
       });
     
-      useEffect(() => {
-        // Charger les données utilisateur depuis localStorage au chargement du composant
-        const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
-        setUser({
-          nom: userInfo.nom || "",
-          prenom: userInfo.prenom || "",
-          email: userInfo.email || "",
-          telephone: userInfo.telephone || "",
-          devise: userInfo.devise || "",
-          logo: userInfo.logo || "", // Initialiser avec le chemin de l'image stockée
-          nomEntreprise: userInfo.nomEntreprise || "",
-          couleur: userInfo.couleur || ""
-        });
-      }, []);
-    
+ 
+    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+
+  
+  
+
+    useEffect(() => {
+      const fetchUserProfile = async () => {
+        const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        const token = userInfo?.token;
+  
+        try {
+          const response = await fetch(`${apiUrl}/api/user/profile`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+  
+          if (!response.ok) {
+            throw new Error('Failed to fetch user profile');
+          }
+  
+          const data = await response.json();
+          console.log(data);
+          setUser({
+        nom: data.nom || "",
+        prenom: data.prenom || "",
+        adresse: data.adresse || "",
+        email: data.email || "",
+        telephone: data.telephone || "",
+        devise: data.devise || "",
+        logo: data.logo || "", // Initialiser avec le chemin de l'image stockée
+        site: data.site || "",
+        Type: user.Type || "",
+        nomEntreprise: data.nomEntreprise || "",
+        couleur: data.couleur || ""
+      });
+          
+          
+        } catch (error) {
+          console.error('Erreur lors de la récupération du profil:', error);
+        }
+      };
+  
+      fetchUserProfile();
+    }, []);
+
+    const getColorValue = (colorName) => {
+        const colorMap = {
+            rouge: "#FF0000", // Rouge
+            vert: "#008000", // Vert
+            bleu: "#0000FF", // Bleu
+            jaune: "#FFFF00", // Jaune
+            orange: "#FFA500", // Orange
+            violet: "#800080", // Violet
+            rose: "#FFC0CB", // Rose
+            marron: "#A52A2A", // Marron
+            gris: "#808080", // Gris
+            noir: "#000000", // Noir
+
+            
+           
+          // Ajoutez plus de couleurs ici selon le besoin
+        };
+      
+        return colorMap[colorName.toLowerCase()] || "#000000"; // Retourne noir par défaut si la couleur n'est pas trouvée
+      };
+      
 
     const generatePDF = () => {
         const doc = new jsPDF();
+        const userColor = getColorValue(user.couleur); // Obtenez la couleur hexadécimale
 
         const addFooter = () => {
           const footerY = 277; // Y position for footer; adjust if needed
-          doc.setFillColor(144, 238, 144); // Vert clair
+          doc.setFillColor(userColor); // Vert clair
           doc.rect(20, footerY, 170, 2, 'F');
           doc.setFontSize(10);
           doc.setTextColor(0, 0, 0);
-          doc.text("Adresse : Sacré Cœur 3, Villa n° 8974 – Code Postal : 11000, Dakar,", 50, footerY + 6);
-          doc.text("E-mail : kebsamadou@gmail.com / amadoukkebe@palabresak2.com", 50, footerY + 12);
-          doc.text("Site Web : www.palabresak2.com, Tél : +221 77 871 25 11", 50, footerY + 18);
+          doc.text(`Adresse : ${user.adresse} `, 50, footerY + 6);
+          doc.text(`E-mail : ${user.email}`, 50, footerY + 12);
+          doc.text(`Site Web : ${user.site}, Tél : ${user.telephone}`, 50, footerY + 18);
       };
 
       // Ajouter le pied de page à la première page
@@ -55,37 +113,41 @@ function GeneratePDFButton({ invoice, currency }) {
         imgRight.src = logoRight;
         doc.addImage(imgLeft, 'PNG', 20, 5, 30, 30);
         // doc.addImage(imgRight, 'PNG', 140, 5, 60, 30);
+        doc.setFontSize(20);
         doc.setFont("helvetica", "bold");
-        // doc.text("Traduction & Interprétation ", 140, 20);
+        doc.setTextColor(userColor);
+        doc.text(`${invoice.type}`, 140, 30);
+        doc.setTextColor(0, 0, 0);
         // doc.text("Anglais <> Français <> Portugais ", 140, 25);
         doc.setFontSize(14);
         doc.text("", 105, 30, null, null, "center");
 
-        doc.setFillColor(144, 238, 144); // Vert clair
-        doc.rect(20, 35, 170, 2, 'F'); // Première ligne verte
+        doc.setFillColor(userColor); // 
+        doc.rect(20, 40, 170, 2, 'F'); // Première ligne verte
 
         // Informations du client
-        let currentY = 45; // Mise à jour pour utiliser currentY pour la position initiale
+        let currentY = 47; // Mise à jour pour utiliser currentY pour la position initiale
         doc.setFontSize(12); // Changez la taille à la valeur souhaitée
         doc.setFont("helvetica", "bold"); // Définissez la police en Helvetica et le style en gras
-        doc.text(` ${invoice.client.name}`, 120, currentY);
+        doc.text(` ${invoice.client.name}`, 130, currentY);
         doc.setFontSize(10);
-        doc.text(`${invoice.client.address}`, 120, currentY + 5);
-        doc.text(`${invoice.client.email}`, 120, currentY + 10);
-        doc.text(`${invoice.client.telephone}`, 120, currentY + 15);
+        doc.text(`${invoice.client.address}`, 130, currentY + 5);
+        doc.text(`${invoice.client.email}`, 130, currentY + 10);
+        doc.text(`${invoice.client.telephone}`, 130, currentY + 15);
 
         // En-tête de la facture
         doc.setFontSize(10);
-        // doc.setFont("helvetica", "bold"); // Définissez la police en Helvetica et le style en gras
-        // doc.text("GIABA", 40, currentY);
-        // doc.setFontSize(10);
-        // doc.text("palabre258@gmail.com", 30, currentY + 5);
-        // doc.text("www.palabresak2.com", 30, currentY + 10);
-        doc.text(`Date: ${new Date(invoice.date).toLocaleDateString()}`, 30, currentY );
+        doc.setFont("helvetica", "bold"); // Définissez la police en Helvetica et le style en gras
+        doc.text(`${user.nomEntreprise}`, 30, currentY);
+        
+        doc.setFontSize(10);
+        doc.text(`${user.email}`, 30, currentY + 5);
+        doc.text(`${user.telephone}`, 30, currentY + 10);
+        doc.text(`Date: ${new Date(invoice.date).toLocaleDateString()}`, 30, currentY + 15);
 
         // En-tête des articles avec fond vert
         currentY += 25 ; // Adjust for marginBottom and header height
-        doc.setFillColor(144, 238, 144);
+        doc.setFillColor(userColor);
         doc.rect(20, currentY, 170, 10, 'F');
         doc.setTextColor(255, 255, 255);
         doc.text("Ref", 22, currentY + 8);

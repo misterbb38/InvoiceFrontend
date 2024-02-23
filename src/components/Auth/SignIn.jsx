@@ -71,7 +71,7 @@ const SignIn = () => {
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Commencez gratuitement</span>
               <h2 className="mb-9 text-2xl font-bold base-content">
-                Connectez-vous à <span className="text-blue-700 font-bold">Factu</span><span className="text-orange-500 font-bold">Flex</span>
+                Connectez-vous à <span className="text-blue-700 font-bold">Factu</span><span className="text-orange-500 font-bold">Flexe</span>
 
               </h2>
 

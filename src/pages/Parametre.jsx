@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
 import userThree from "../images/user/user-03.png";
+import { data } from "autoprefixer";
 
 const Parametre = () => {
   const [user, setUser] = useState({
@@ -9,27 +10,66 @@ const Parametre = () => {
     email: "",
     telephone: "",
     devise: "",
-    logo: ""
+    logo: "",
+    site: "",
+    couleur: "",
+    nomEntreprise: "",
   });
   const [logo, setLogo] = useState(null); // Pour gérer le fichier image sélectionné
   const [isModified, setIsModified] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
+  
+
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
+  
+  
+
   useEffect(() => {
-    // Charger les données utilisateur depuis localStorage au chargement du composant
-    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
-    setUser({
-      nom: userInfo.nom || "",
-      prenom: userInfo.prenom || "",
-      email: userInfo.email || "",
-      telephone: userInfo.telephone || "",
-      devise: userInfo.devise || "",
-      logo: userInfo.logo || "", // Initialiser avec le chemin de l'image stockée
+    const fetchUserProfile = async () => {
+      const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      const token = userInfo?.token;
+
+      try {
+        const response = await fetch(`${apiUrl}/api/user/profile`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch user profile');
+        }
+
+        const data = await response.json();
+        console.log(data);
+        setUser({
+      nom: data.nom || "",
+      prenom: data.prenom || "",
+      adresse: data.adresse || "",
+      email: data.email || "",
+      telephone: data.telephone || "",
+      devise: data.devise || "",
+      logo: data.logo || "", // Initialiser avec le chemin de l'image stockée
+      site: data.site || "",
+      nomEntreprise: data.nomEntreprise || "",
+      couleur: data.couleur || ""
     });
+        
+        
+      } catch (error) {
+        console.error('Erreur lors de la récupération du profil:', error);
+      }
+    };
+
+    fetchUserProfile();
   }, []);
+    
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -123,14 +163,17 @@ const Parametre = () => {
     <>
       <div className="bg-base-100 min-h-[800px]">
         <NavigationBreadcrumb pageName="Settings" />
+        
         <div className="bg-base-100 base-content grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
+            
             <div className="rounded-sm border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium base-content">
                   Personal Information
                 </h3>
               </div>
+              
               <div className="p-7">
                 <form onSubmit={handleSubmit}>
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -161,6 +204,20 @@ const Parametre = () => {
                       </label>
                     </div>
                   </div>
+
+                  <div className="mb-5.5">
+                    <label className="input input-bordered flex items-center gap-2">
+                      Nom d'entreprise
+                      <input
+                        type="text"
+                        className="grow"
+                        placeholder="Nom d'entreprise"
+                        name="nomEntreprise"
+                        value={user.nomEntreprise}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </div>
                   <div className="mb-5.5">
                     <label className="input input-bordered flex items-center gap-2">
                       Email
@@ -187,6 +244,57 @@ const Parametre = () => {
                       />
                     </label>
                   </div>
+                  <div className="mb-5.5">
+                    <label className="input input-bordered flex items-center gap-2">
+                      Adresse
+                      <input
+                        type="text"
+                        className="grow"
+                        placeholder="Adresse"
+                        name="adresse"
+                        value={user.adresse}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="mb-5.5">
+                    <label className="input input-bordered flex items-center gap-2">
+                      Site web
+                      <input
+                        type="text"
+                        className="grow"
+                        placeholder="site"
+                        name="site"
+                        value={user.site}
+                        onChange={handleChange}
+                      />
+                    </label>
+                  </div>
+                  <div className="mb-5.5">
+  <select
+    className="select select-bordered w-full max-w-xs"
+    name="couleur"
+    value={user.couleur}
+    onChange={handleChange}
+  >
+    <option disabled>Choisissez une couleur principale</option>
+    <option value="rouge">Rouge</option>
+    <option value="vert">Vert</option>
+    <option value="bleu">Bleu</option>
+    <option value="jaune">Jaune</option>
+    <option value="orange">Orange</option>
+    <option value="violet">Violet</option>
+    <option value="rose">Rose</option>
+    <option value="marron">Marron</option>
+    <option value="gris">Gris</option>
+    <option value="noir">Noir</option>
+    
+    
+  </select>
+</div>
+
+
                   <div className="mb-5.5">
                     <select
                       className="select select-bordered w-full max-w-xs"
@@ -302,7 +410,7 @@ const Parametre = () => {
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium base-content hover:shadow-1 dark:border-strokedark "
-                      type="submit"
+                      type="reset"
                     >
                       Annuller
                     </button>
@@ -319,6 +427,7 @@ const Parametre = () => {
             </div>
           </div>
         </div>
+        
       </div>
     </>
   );

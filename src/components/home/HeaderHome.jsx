@@ -41,16 +41,16 @@ const HeaderHome = () => {
           variants={linkVariants}
         >
           <a href="#hero-home" className="mr-5 text-base-content hover:text-gray-900">
-            Hero
+            Acceuil
           </a>
           <a href="#feature-home" className="mr-5 text-base-content hover:text-gray-900">
-            Features
+            Aventages
           </a>
           <a href="#step-home" className="mr-5 text-base-content hover:text-gray-900">
-            Steps
+            a propos
           </a>
           <a href="#price-home" className="mr-5 text-base-content hover:text-gray-900">
-            Pricing
+            Prix
           </a>
         </motion.nav>
         <label className="cursor-pointer grid place-items-center">

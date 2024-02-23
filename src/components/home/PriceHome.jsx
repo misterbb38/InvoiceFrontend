@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom'; 
 
 const PriceHome = () => {
   const [isAnnual, setIsAnnual] = useState(false);
+  const navigate = useNavigate();
 
   const plans = {
     monthly: [
@@ -31,6 +33,10 @@ const PriceHome = () => {
         duration: 0.8
       }
     }
+    
+  };
+  const handleClick = () => {
+    navigate('/signup'); // Redirige vers /signup
   };
 
   return (
@@ -73,7 +79,7 @@ const PriceHome = () => {
                     {feature}
                   </p>
                 ))}
-                <button className="flex items-center mt-auto btn btn-primary border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded">
+                <button   onClick={handleClick} className="flex items-center mt-auto btn btn-primary border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded">
                   Choisir
                   <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4 ml-auto" viewBox="0 0 24 24">
                     <path d="M5 12h14M12 5l7 7-7 7"></path>

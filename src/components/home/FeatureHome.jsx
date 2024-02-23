@@ -34,7 +34,7 @@ const FeatureHome = () => {
           viewport={{ once: true, amount: 0.2 }} 
           className="text-center mb-20"
         >
-          <h1 className="sm:text-3xl text-2xl font-medium title-font text-base-content mb-4">FactuFlex : L'Art de la Gestion Financière</h1>
+          <h1 className="sm:text-3xl text-2xl font-medium title-font text-base-content mb-4">FactuFlexe : L'Art de la Gestion Financière</h1>
           <p className="text-base leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Rejoignez l'avant-garde de la gestion financière avec FactuFlex, où innovation et tradition se rencontrent pour simplifier vos processus comptables. Notre plateforme, conçue pour les entrepreneurs visionnaires, intègre des outils intuitifs pour la gestion de vos factures et devis, alliant esthétique moderne et fonctionnalité sans précédent. Découvrez une solution qui évolue avec vos besoins, permettant une gestion financière à la fois élégante et performante.</p>
         </motion.div>
         <motion.div 
