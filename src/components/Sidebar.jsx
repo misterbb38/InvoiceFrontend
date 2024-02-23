@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome,
   faFileInvoiceDollar, // Icone pour Facture
   faFileAlt, // Icone pour Devis
-  faClipboardList, // Icone pour Formulaire
-     
+  faClipboardList,
+  faEnvelope, // Icone pour Formulair
       faBook,
        faCog } from '@fortawesome/free-solid-svg-icons';
 import logo from '../assets/logo.png';
@@ -21,7 +21,7 @@ function Sidebar() {
     { id: 3, label: 'Devis', route: '/dash/Devis', icon: faFileAlt },
     { id: 4, label: 'Formulaire', route: '/dash/Formulaire', icon: faClipboardList },
     { id: 5, label: 'Instruction', route: '/dash/instruction', icon: faBook },
-    { id: 6, label: 'Message', route: '/dash/notification', icon: faCog },
+    { id: 6, label: 'Message', route: '/dash/notification', icon: faEnvelope },
     { id: 7, label: 'Parametre', route: '/dash/parametre', icon: faCog },
   ];
 
