@@ -29,10 +29,16 @@ function UploadExcelButton() {
 
         const formData = new FormData();
         formData.append('file', selectedFile);
+        const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+        const token = userInfo?.token; // Récupérer le token depuis le stockage local
 
         try {
             const response = await fetch(`${apiUrl}/api/invoice/upload`, {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+                   
+                  },
                 body: formData,
             });
 
