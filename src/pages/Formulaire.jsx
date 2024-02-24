@@ -54,6 +54,11 @@ const Formulaire = () => {
     ]);
   };
 
+   // Fonction pour supprimer un article
+   const supprimerArticle = (indexASupprimer) => {
+    setArticles(articles.filter((_, index) => index !== indexASupprimer));
+  };
+
   const handleChangeArticle = (index, e) => {
     const updatedArticles = articles.map((article, i) => {
       if (i === index) {
@@ -403,8 +408,18 @@ const Formulaire = () => {
                            
                             onChange={(e) => handleChangeArticle(e, index)}
                           /> */}
+                          <button
+      type="button"
+      className="btn btn-error btn-xs"
+      onClick={() => supprimerArticle(index)} // 'index' est bien défini ici
+    >
+      Supprimer cet article
+    </button>
                       </div>
+                      
                     ))}
+
+                    
 
                     <button
                       className="flex justify-center rounded font-bold btn btn-primary py-2 px-6 font-medium  hover:bg-opacity-70"
