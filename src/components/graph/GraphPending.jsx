@@ -6,20 +6,20 @@ import PropTypes from 'prop-types';
 // Enregistrement de l'ArcElement nécessaire pour le Doughnut chart
 Chart.register(ArcElement);
 
-function GraphPending({ selectedYear }) {
+function Graphpending({ selectedYear }) {
   const stats = UseInvoiceStats(selectedYear);
 
-  let countPending = 0;
+  let countpending = 0;
   let totalCount = 0;
 
   if (stats && stats.length > 0) {
     // Filtrer les données pour l'année sélectionnée
     const filteredStatsForYear = stats.filter(stat => stat._id.year === parseInt(selectedYear, 10));
 
-    // Trouver les statistiques pour les factures payées
-    const invoicePending = filteredStatsForYear.find(stat => stat._id.status === 'pending');
-    if (invoicePending) {
-      countPending = invoicePending.count;
+    // Trouver les statistiques pour les factures paids
+    const invoicepending = filteredStatsForYear.find(stat => stat._id.status === 'Attente');
+    if (invoicepending) {
+      countpending = invoicepending.count;
     }
 
     // Calculer le nombre total des factures pour l'année sélectionnée
@@ -27,10 +27,10 @@ function GraphPending({ selectedYear }) {
   }
 
   const data = {
-    labels: ['Factures Payées', 'Autres Factures'],
+    labels: ['Factures En attente', 'Autres Factures'],
     datasets: [
       {
-        data: [countPending, totalCount - countPending],
+        data: [countpending, totalCount - countpending],
         backgroundColor: ['#36A2EB', '#FF6384'],
       },
     ],
@@ -46,8 +46,8 @@ function GraphPending({ selectedYear }) {
   );
 }
 
-GraphPending.propTypes = {
+Graphpending.propTypes = {
   selectedYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
-export default  GraphPending;
+export default  Graphpending;

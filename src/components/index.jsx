@@ -2,8 +2,8 @@ import { useState } from "react";
 import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
 import UseInvoiceStats from "./dataInvoice/UseInvoiceStats";
 import UseFilteredStats from "./dataInvoice/UseFilteredStats";
-import GraphPaid from "./graph/GraphPaid";
-import GraphPending from "./graph/GraphPending";
+import Graphpaid from "./graph/GraphPaid";
+import Graphpending from "./graph/GraphPending";
 import GraphCancelled from "./graph/GraphCancelled";
 import GraphFilter from "./graph/GraphFilter";
 import ClientInvoiceSummary from "./SummaryClient";
@@ -17,23 +17,23 @@ const HomeContent = () => {
   console.log(stats);
   console.log(filteredStats);
 
-  let countPaid = 0, totalAmountPaid = 0, 
-      countPending = 0, totalAmountPending = 0,
+  let countpaid = 0, totalAmountpaid = 0, 
+      countpending = 0, totalAmountpending = 0,
       countCancelled = 0, totalAmountCancelled = 0,
       totalCount = 0;
  // Calcul des statistiques basé sur les données récupérées
  if (stats) {
   stats.forEach(({ _id, totalAmount, count }) => {
     switch (_id.status) {
-      case 'paid':
-        countPaid += count;
-        totalAmountPaid += totalAmount;
+      case 'Payée':
+        countpaid += count;
+        totalAmountpaid += totalAmount;
         break;
-      case 'pending':
-        countPending += count;
-        totalAmountPending += totalAmount;
+      case 'Attente':
+        countpending += count;
+        totalAmountpending += totalAmount;
         break;
-      case 'cancelled':
+      case 'Annullée':
         countCancelled += count;
         totalAmountCancelled += totalAmount;
         break;
@@ -44,8 +44,8 @@ const HomeContent = () => {
   totalCount = stats.reduce((acc, curr) => acc + curr.count, 0);
 }
 
-const percentagePaid = ((countPaid / totalCount) * 100).toFixed(1) || 0;
-const percentagePending = ((countPending / totalCount) * 100).toFixed(1) || 0;
+const percentagepaid = ((countpaid / totalCount) * 100).toFixed(1) || 0;
+const percentagepending = ((countpending / totalCount) * 100).toFixed(1) || 0;
 const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 0;
 
 
@@ -64,14 +64,14 @@ const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 
         <div className="bg-base-300 box p-4 rounded-lg shadow flex justify-between items-center">
           <div>
             <h2 className="text-lg base-content font-semibold">
-              Facture payée
+              Factures payées
             </h2>
-            <span className="text-xs font-bold">Nombre: {countPaid}</span>
-            <p className="text-xs font-bold">somme:{totalAmountPaid} cfa</p>
-            <p className="text-xs font-bold">poucentage:{percentagePaid}% </p>
+            <span className="text-xs font-bold">Nombre: {countpaid}</span>
+            <p className="text-xs font-bold">somme:{totalAmountpaid} cfa</p>
+            <p className="text-xs font-bold">poucentage:{percentagepaid}% </p>
           </div>
           <div>
-            <GraphPaid  selectedYear={selectedYear} />
+            <Graphpaid  selectedYear={selectedYear} />
             <p className="text-xl"></p>
           </div>
         </div>
@@ -79,21 +79,21 @@ const percentageCancelled = ((countCancelled / totalCount) * 100).toFixed(1) || 
         <div className="bg-base-300 box p-4 rounded-lg shadow flex justify-between items-center">
           <div>
             <h2 className="text-lg base-content font-semibold">
-              Facture impayée
+              Factures en attente
             </h2>
-            <span className="text-xs font-bold">Nombre: {countPending}</span>
-            <p className="text-xs font-bold">somme:{totalAmountPending} cfa</p>
-            <p className="text-xs font-bold">poucentage:{percentagePending}% </p>
+            <span className="text-xs font-bold">Nombre: {countpending}</span>
+            <p className="text-xs font-bold">somme:{totalAmountpending} cfa</p>
+            <p className="text-xs font-bold">poucentage:{percentagepending}% </p>
           </div>
           <div>
-            <GraphPending  selectedYear={selectedYear} />
+            <Graphpending  selectedYear={selectedYear} />
             <p className="text-xl"></p>
           </div>
         </div>
         <div className="bg-base-300 box p-4 rounded-lg shadow flex justify-between items-center">
           <div>
             <h2 className="text-lg base-content font-semibold">
-              Facture annullée
+              Factures annullées
             </h2>
             <span className="text-xs font-bold">Nombre: {countCancelled}</span>
             <p className="text-xs font-bold">somme:{totalAmountCancelled} cfa</p>

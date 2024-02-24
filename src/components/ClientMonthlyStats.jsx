@@ -79,15 +79,15 @@ const ClientMonthlyStats = ({ selectedYear }) => {
         <div className=" grid grid-cols-2 gap-4">
           <div>
             <p className="text-xs font-bold">Statistiques pour {selectedClient} - {months[selectedMonth - 1]}</p>
-            <p className={`text-xs font-bold ${selectedData.paid.totalAmount > 0 ? 'text-green-500' : ''}`}>Factures Payées: {selectedData.paid.count}</p>
-            <p className={`text-xs font-bold ${selectedData.pending.totalAmount > 0 ? 'text-red-500' : ''}`}>Factures En Attente: {selectedData.pending.count}</p>
-            <p className='text-xs font-bold'>Factures Annulées: {selectedData.cancelled.count}</p>
+            <p className={`text-xs font-bold ${selectedData.Payée.totalAmount > 0 ? 'text-green-500' : ''}`}>Payées: {selectedData.Payée.count}</p>
+            <p className={`text-xs font-bold ${selectedData.Attente.totalAmount > 0 ? 'text-red-500' : ''}`}>En attente: {selectedData.Attente.count}</p>
+            <p className='text-xs font-bold'>Annulées: {selectedData.Annullée.count}</p>
           </div>
           <div>
             <h5 className="text-xs font-bold">Sommes</h5>
-            <p className= {`text-xs font-bold ${selectedData.paid.totalAmount > 0 ? 'text-green-500' : ''}`}>Total Payé: {selectedData.paid.totalAmount}</p>
-            <p className={`text-xs font-bold ${selectedData.pending.totalAmount > 0 ? 'text-red-500' : ''}`}>Total En Attente: {selectedData.pending.totalAmount}</p>
-            <p className='text-xs font-bold'>Total Annulé: {selectedData.cancelled.totalAmount}</p>
+            <p className= {`text-xs font-bold ${selectedData.Payée.totalAmount > 0 ? 'text-green-500' : ''}`}>Payées: {selectedData.Payée.totalAmount}</p>
+            <p className={`text-xs font-bold ${selectedData.Attente.totalAmount > 0 ? 'text-red-500' : ''}`}>En attente: {selectedData.Attente.totalAmount}</p>
+            <p className='text-xs font-bold'>Total Annulé: {selectedData.Annullée.totalAmount}</p>
           </div>
         </div>
       )}

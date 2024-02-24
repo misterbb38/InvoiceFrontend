@@ -15,7 +15,6 @@ function Facture() {
 
   // Mapping des statuts aux classes de couleur de DaisyUI
   const statusBadgeClasses = {
-    
     Attente:"badge badge-warning",
     Payée: "badge badge-success",
     Annullée: "badge badge-error"

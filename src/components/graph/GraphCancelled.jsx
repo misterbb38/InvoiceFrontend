@@ -16,8 +16,8 @@ function GraphCancelled({ selectedYear }) {
     // Filtrer les données pour l'année sélectionnée
     const filteredStatsForYear = stats.filter(stat => stat._id.year === parseInt(selectedYear, 10));
 
-    // Trouver les statistiques pour les factures payées
-    const invoiceCancelled = filteredStatsForYear.find(stat => stat._id.status === 'cancelled');
+    // Trouver les statistiques pour les factures paids
+    const invoiceCancelled = filteredStatsForYear.find(stat => stat._id.status === 'Annullée');
     if (invoiceCancelled) {
       countCancelled = invoiceCancelled.count;
     }
@@ -27,7 +27,7 @@ function GraphCancelled({ selectedYear }) {
   }
 
   const data = {
-    labels: ['Factures Payées', 'Autres Factures'],
+    labels: ['Factures Annullées', 'Autres Factures'],
     datasets: [
       {
         data: [countCancelled, totalCount - countCancelled],

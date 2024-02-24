@@ -40,28 +40,28 @@ const ClientInvoiceSummary = ({ selectedYear }) => {
           <div className="w-full">
             <h5 className="text-lg font-semibold">Statistiques</h5>
             <div className="mt-1">
-              <p className={`text-xs font-bold ${selectedClientData.totalAmountPaid > 0 ? "text-green-500" : ""}`}>
-                Factures Payées: {selectedClientData.countPaid}
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountPayée > 0 ? "text-green-500" : ""}`}>
+                Factures  payées: {selectedClientData.countPayée}
               </p>
-              <p className={`text-xs font-bold ${selectedClientData.totalAmountPending > 0 ? "text-yellow-500" : ""}`}>
-                Factures En Attente: {selectedClientData.countPending}
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountAttente > 0 ? "text-yellow-500" : ""}`}>
+                Factures  en attente: {selectedClientData.countAttente}
               </p>
               <p className="text-xs font-bold">
-                Factures Annulées: {selectedClientData.countCancelled}
+                Factures Annulées: {selectedClientData.countAnnullée}
               </p>
             </div>
           </div>
           <div className="w-full">
             <p className="text-lg font-semibold">Sommes</p>
             <div className="mt-1">
-              <p className={`text-xs font-bold ${selectedClientData.totalAmountPaid > 0 ? "text-green-500" : ""}`}>
-                Factures Payées: {selectedClientData.totalAmountPaid} cfa
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountPayée > 0 ? "text-green-500" : ""}`}>
+                Factures payées: {selectedClientData.totalAmountPayée} cfa
               </p>
-              <p className={`text-xs font-bold ${selectedClientData.totalAmountPending > 0 ? "text-yellow-500" : ""}`}>
-                Factures En Attente: {selectedClientData.totalAmountPending} cfa
+              <p className={`text-xs font-bold ${selectedClientData.totalAmountAttente > 0 ? "text-yellow-500" : ""}`}>
+                Factures en attente: {selectedClientData.totalAmountAttente} cfa
               </p>
               <p className="text-xs font-bold">
-                Factures Annulées: {selectedClientData.totalAmountCancelled} cfa
+                Factures Annulées: {selectedClientData.totalAmountAnnullée} cfa
               </p>
             </div>
           </div>

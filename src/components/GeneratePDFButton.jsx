@@ -154,7 +154,7 @@ const { textColor, fillColor } = statusColors[invoice.status];
         doc.text(`${invoice.client.telephone}`, 130, currentY + 15);
 
         // En-tête de la facture
-        doc.setFontSize(10);
+        doc.setFontSize(12);
         doc.setFont("helvetica", "bold"); // Définissez la police en Helvetica et le style en gras
         doc.text(`${user.nomEntreprise}`, 30, currentY);
         

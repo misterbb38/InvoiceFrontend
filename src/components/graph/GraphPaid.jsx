@@ -6,20 +6,20 @@ import PropTypes from 'prop-types';
 // Enregistrement de l'ArcElement nécessaire pour le Doughnut chart
 Chart.register(ArcElement);
 
-function GraphPaid({ selectedYear }) {
+function Graphpaid({ selectedYear }) {
   const stats = UseInvoiceStats(selectedYear);
 
-  let countPaid = 0;
+  let countpaid = 0;
   let totalCount = 0;
 
   if (stats && stats.length > 0) {
     // Filtrer les données pour l'année sélectionnée
     const filteredStatsForYear = stats.filter(stat => stat._id.year === parseInt(selectedYear, 10));
 
-    // Trouver les statistiques pour les factures payées
-    const invoicePaid = filteredStatsForYear.find(stat => stat._id.status === 'paid');
-    if (invoicePaid) {
-      countPaid = invoicePaid.count;
+    // Trouver les statistiques pour les factures paids
+    const invoicepaid = filteredStatsForYear.find(stat => stat._id.status === 'Payée');
+    if (invoicepaid) {
+      countpaid = invoicepaid.count;
     }
 
     // Calculer le nombre total des factures pour l'année sélectionnée
@@ -27,10 +27,10 @@ function GraphPaid({ selectedYear }) {
   }
 
   const data = {
-    labels: ['Factures Payées', 'Autres Factures'],
+    labels: ['Factures payées', 'Autres Factures'],
     datasets: [
       {
-        data: [countPaid, totalCount - countPaid],
+        data: [countpaid, totalCount - countpaid],
         backgroundColor: ['#36A2EB', '#FF6384'],
       },
     ],
@@ -46,8 +46,8 @@ function GraphPaid({ selectedYear }) {
   );
 }
 
-GraphPaid.propTypes = {
+Graphpaid.propTypes = {
   selectedYear: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
-export default GraphPaid;
+export default Graphpaid;

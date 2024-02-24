@@ -65,9 +65,9 @@
         onChange={handleInputChange}
       >
         <option value="">Tous les statuts</option>
-        <option value="pending">En attente</option>
-        <option value="paid">Payée</option>
-        <option value="cancelled">Annulée</option>
+        <option value="Attente">Attente</option>
+        <option value="Payée">Payée</option>
+        <option value="Annullée">Annulée</option>
       </select>
         <button className="btn btn-outline btn-primary w-auto mx-2" onClick={handleFilter}>Filtrer</button>
         </div>

@@ -159,7 +159,7 @@ const Formulaire = () => {
     setSelectedClientId("");
     setArticles([]);
     setType("facture");
-    setStatus("pending");
+    setStatus("Attente");
   };
 
   return (
@@ -336,7 +336,7 @@ const Formulaire = () => {
                     </select>
                   </div>
 
-                  {/* Sélecteur pour le Statut (Pending, Paid, Cancelled) */}
+                  {/* Sélecteur pour le Statut (pending, paid, Cancelled) */}
                   <div className="mb-5.5">
                     <label className="mb-3 block text-sm font-medium base-content">
                       Statut
@@ -348,7 +348,7 @@ const Formulaire = () => {
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value="Attente">En attente</option>
+                      <option value="Attente">Attente</option>
                       <option value="Payée">Payée</option>
                       <option value="Annullée">Annulée</option>
                     </select>
