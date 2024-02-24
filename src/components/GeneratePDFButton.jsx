@@ -246,7 +246,7 @@ function GeneratePDFButton({ invoice, currency }) {
         doc.save(`facture-${invoice._id}.pdf`);
     };
 
-    return <button className="btn btn-primary btn-sm mr-2" onClick={generatePDF}>Générer PDF</button>;
+    return <button className="btn btn-primary " onClick={generatePDF}>Générer PDF</button>;
 }
 
 GeneratePDFButton.propTypes = {

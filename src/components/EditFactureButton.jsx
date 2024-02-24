@@ -84,6 +84,9 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
     if (!formData.clientTelephone)
       errors.clientTelephone = "Le numéro du client est obligatoire";
 
+    if (!formData.type)
+      errors.clientTelephone = "Le numéro du client est obligatoire";
+
     formData.items.forEach((item, index) => {
       if (!item.ref)
         errors[`item-ref-${index}`] = "La référence est obligatoire";
@@ -124,6 +127,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
               address: formData.clientAddress,
               email: formData.clientEmail,
               telephone: formData.clientTelephone,
+              
             },
             items: formData.items,
             date: formData.date,
@@ -172,7 +176,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
   return (
     <>
       <button
-        className="btn btn-secondary btn-sm"
+        className="btn btn-secondary "
         onClick={() => setShowModal(true)}
       >
         Éditer
@@ -227,6 +231,24 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
                   placeholder="Email du client"
                 />
                 {renderError("clientEmail")}
+              </div>
+
+              {/* Sélecteur de statut après le champ Email */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text">Statut de la facture</span>
+                </label>
+                <select
+                  className="select select-bordered select-lg w-full max-w-xs"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                >
+                  <option value="Attente">En attente</option>
+                  <option value="Payée">Payée</option>
+                  <option value="Annullée">Annulée</option>
+                </select>
+                {renderError("status")}
               </div>
 
               {/* Champ Téléphone du client */}

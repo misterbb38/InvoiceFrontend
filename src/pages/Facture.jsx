@@ -13,6 +13,14 @@ function Facture() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currency, setCurrency] = useState('FCFA'); // EUR comme valeur par défaut
 
+  // Mapping des statuts aux classes de couleur de DaisyUI
+  const statusBadgeClasses = {
+    
+    Attente:"badge badge-warning",
+    Payée: "badge badge-success",
+    Annullée: "badge badge-error"
+  };
+
   const facturesPerPage = 10;
 
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
@@ -157,11 +165,19 @@ function Facture() {
                     <td>{new Date(facture.date).toLocaleDateString()}</td>
                     <td>{facture.client.telephone}</td>
                     <td>{facture.total.toFixed(2)} {currency}</td>
-                    <td>{facture.status}</td>
+                    {/* <td>{facture.status}</td> */}
+
+                    <td className="text-center ">
+                    <span className={`${statusBadgeClasses[facture.status]} text-white  `}>
+                      {facture.status.charAt(0).toUpperCase() + facture.status.slice(1)}
+                    </span>
+                  </td>
                     <td>
+                    <div className="flex justify-around space-x-1">
                       <GeneratePDFButton invoice={facture} currency={currency} />
                       <EditFactureButton factureId={facture._id} onFactureUpdated={refreshFactures} />
-                      <DeleteFactureButton factureId={facture._id} onFactureDeleted={refreshFactures}  />
+                      <DeleteFactureButton factureId={facture._id} onFactureDeleted={refreshFactures} />
+                    </div>
                     </td>
                   </tr>
                 ))}

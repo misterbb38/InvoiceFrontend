@@ -27,7 +27,7 @@ function DeleteFactureButton({ factureId, onFactureDeleted }) {
   };
 
   return (
-    <button className="btn btn-error btn-sm mx-2" onClick={handleDelete}>
+    <button className="btn btn-error " onClick={handleDelete}>
       Supprimer
     </button>
   );

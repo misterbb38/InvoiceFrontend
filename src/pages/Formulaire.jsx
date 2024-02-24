@@ -8,7 +8,7 @@ const Formulaire = () => {
   const [clients, setClients] = useState([]);
   const [articles, setArticles] = useState([]);
   const [type, setType] = useState("facture"); // 'facture' par défaut
-  const [status, setStatus] = useState("pending"); // 'pending' par défaut
+  const [status, setStatus] = useState("Attente"); // 'pending' par défaut
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
@@ -348,9 +348,9 @@ const Formulaire = () => {
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                     >
-                      <option value="pending">En attente</option>
-                      <option value="paid">Payée</option>
-                      <option value="cancelled">Annulée</option>
+                      <option value="Attente">En attente</option>
+                      <option value="Payée">Payée</option>
+                      <option value="Annullée">Annulée</option>
                     </select>
                   </div>
 
