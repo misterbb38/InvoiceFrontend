@@ -86,6 +86,16 @@ function GeneratePDFButton({ invoice, currency }) {
       
         return colorMap[colorName.toLowerCase()] || "#000000"; // Retourne noir par défaut si la couleur n'est pas trouvée
       };
+
+      // Définition des couleurs de fond basées sur le statut
+const statusColors = {
+  Attente: { textColor: "#FFFFFF", fillColor: "#FFA500" }, // Orange avec texte blanc
+  Payée: { textColor: "#FFFFFF", fillColor: "#008000" }, // Vert avec texte blanc
+  Annullée: { textColor: "#FFFFFF", fillColor: "#FF0000" }, // Rouge avec texte blanc
+};
+
+// Récupération de la configuration de couleur basée sur le statut
+const { textColor, fillColor } = statusColors[invoice.status];
       
 
     const generatePDF = () => {
@@ -117,6 +127,14 @@ function GeneratePDFButton({ invoice, currency }) {
         doc.setFont("helvetica", "bold");
         doc.setTextColor(userColor);
         doc.text(`${invoice.type}`, 140, 30);
+        doc.setFontSize(15);
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(textColor);
+        doc.setFillColor(fillColor);
+        // Dessin du rectangle de fond
+// Remplacez les valeurs 140, 30, 35, 10 par les coordonnées et dimensions souhaitées pour le rectangle
+        doc.rect(140, 33, 23, 6, 'F');
+        doc.text(`${invoice.status}`, 140, 37);
         doc.setTextColor(0, 0, 0);
         // doc.text("Anglais <> Français <> Portugais ", 140, 25);
         doc.setFontSize(14);
@@ -244,6 +262,7 @@ function GeneratePDFButton({ invoice, currency }) {
       
 
         doc.save(`facture-${invoice._id}.pdf`);
+        
     };
 
     return <button className="btn btn-primary " onClick={generatePDF}>Générer PDF</button>;
