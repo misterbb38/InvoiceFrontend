@@ -17,7 +17,8 @@ function Facture() {
   const statusBadgeClasses = {
     Attente:"badge badge-warning",
     Payée: "badge badge-success",
-    Annullée: "badge badge-error"
+    Annullée: "badge badge-error",
+    
   };
 
   const facturesPerPage = 10;

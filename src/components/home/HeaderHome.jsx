@@ -52,6 +52,9 @@ const HeaderHome = () => {
           <a href="#price-home" className="mr-5 text-base-content hover:text-gray-900">
             Prix
           </a>
+          <a href="#contact-form" className="mr-5 text-base-content hover:text-gray-900">
+            Contact
+          </a>
         </motion.nav>
         <label className="cursor-pointer grid place-items-center">
           <input
