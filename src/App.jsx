@@ -46,7 +46,7 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         
         <Route path="/signup" element={<SignUp />} />
-        <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute />}>  
           <Route path="/keyGen" element={<GenerateAccessKey />} />
           <Route path="/key" element={<KeyExpired />} />
           <Route path="/dash" element={<AppLayout />}>

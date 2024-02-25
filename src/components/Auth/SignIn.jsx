@@ -34,15 +34,27 @@ const SignIn = () => {
       console.log(data)
   
       const currentDate = new Date();
-      const expirationDate = new Date(data.dateExpiration);
-      
-      if (data.userType === 'simple' && currentDate <= expirationDate) {
-        navigate('/dash');
-      } else if (data.userType === 'simple' && currentDate > expirationDate) {
-        navigate('/key');
-      } else {
-        navigate('/KeyGen');
-      }
+const expirationDate = new Date(data.dateExpiration);
+const daysUntilExpiration = (expirationDate - currentDate) / (1000 * 3600 * 24);
+
+if (data.userType === 'simple') {
+  if (currentDate <= expirationDate) {
+    if (daysUntilExpiration <= 7) {
+      // Si l'abonnement expire dans 7 jours ou moins, rediriger vers /key
+      navigate('/key');
+    } else {
+      // Sinon, continuer vers /dash
+      navigate('/dash');
+    }
+  } else {
+    // Si la date d'expiration est passée, rediriger vers /key
+    navigate('/key');
+  }
+} else {
+  // Pour les autres types d'utilisateurs, rediriger vers /KeyGen
+  navigate('/KeyGen');
+}
+
     } catch (error) {
       setError(error.message);
     } finally {
