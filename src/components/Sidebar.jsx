@@ -10,7 +10,7 @@ import { faHome,
   faEnvelope, // Icone pour Formulair
       faBook,
        faCog } from '@fortawesome/free-solid-svg-icons';
-import logo from '../assets/logo.png';
+import logo from '../images/logo/logo.png'
 
 function Sidebar() {
   const [selectedMenuItem, setSelectedMenuItem] = useState(1);

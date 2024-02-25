@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo } from "react";
 import ReactApexChart from "react-apexcharts";
 import UseFilteredStats from "../dataInvoice/UseFilteredStats";
 
-const GraphFilter = () => {
+const GraphFilter = () => { 
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Assurez-vous que la valeur initiale correspond à l'état de chargement initial
   const filteredStats = UseFilteredStats({ year: selectedYear });
 
   // Calcul des séries pour le diagramme
@@ -17,20 +17,23 @@ const GraphFilter = () => {
 
   useEffect(() => {
     // Détecte si filteredStats est en train d'être chargé
-    if (!filteredStats) {
-      setIsLoading(true);
-    } else {
-      setIsLoading(false);
-    }
+    setIsLoading(!filteredStats); // Simplement basculer l'état de chargement basé sur la présence de filteredStats
   }, [filteredStats]);
 
-  // Options pour ApexChart
+  // Options pour ApexChart, avec activation de la fonctionnalité de téléchargement
   const chartOptions = {
     chart: {
-      stacked: true,
-      stackType: "100%",
       type: "bar",
       height: 350,
+     
+      
+      
+      toolbar: {
+        show: true,
+        tools: {
+          download: true, // Active le bouton de téléchargement
+        },
+      },
     },
     plotOptions: {
       bar: {
@@ -47,10 +50,7 @@ const GraphFilter = () => {
       colors: ["transparent"],
     },
     xaxis: {
-      categories: [
-        "Jan", "Fev", "Mar", "Avr", "Mai", "Jui",
-        "Jul", "Aut", "Sep", "Oct", "Nov", "Dec",
-      ],
+      categories: ["Jan", "Fev", "Mar", "Avr", "Mai", "Jui", "Jul", "Aut", "Sep", "Oct", "Nov", "Dec"],
     },
     yaxis: {
       title: {
@@ -62,9 +62,12 @@ const GraphFilter = () => {
     },
     tooltip: {
       y: {
-        formatter: function(val) {
+        formatter: function (val) {
           return val + " Cfa";
         },
+      },
+      fixed: {
+        enabled: false, // Si nécessaire, ajustez cette option pour contrôler le comportement du tooltip
       },
     },
     legend: {
@@ -80,25 +83,25 @@ const GraphFilter = () => {
           id="yearSelector"
           value={selectedYear}
           onChange={(e) => {
-            setIsLoading(true); // Activer l'indicateur de chargement lors du changement d'année
+            setIsLoading(true);
             setSelectedYear(e.target.value);
           }}
           className="ml-2 border-2"
         >
-          {Array.from(new Array(20), (val, index) => new Date().getFullYear() - index).map((year) => (
-            <option key={year} value={year}>{year}</option>
+          {Array.from(new Array(20), (_, index) => new Date().getFullYear() - index).map(year => (
+            <option key={year} value={year.toString()}>{year}</option>
           ))}
         </select>
       </div>
       {isLoading ? (
-        <span className="loading loading-spinner text-primary"></span> // Afficher l'indicateur de chargement
+        <span className="loading loading-spinner text-primary"></span>
       ) : (
         <div className="w-full h-full">
           <ReactApexChart
             options={chartOptions}
             series={chartSeries}
             type="bar"
-            height="100%"
+            height="100%" // Hauteur fixe pour assurer une bonne visualisation
           />
         </div>
       )}
