@@ -12,6 +12,12 @@ const Formulaire = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(true);
+
+  const [fullName, setFullName] = useState('');
+const [phoneNumber, setPhoneNumber] = useState('');
+const [emailAddress, setEmailAddress] = useState('');
+const [address, setAddress] = useState('');
+
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -41,6 +47,23 @@ const Formulaire = () => {
 
     fetchClients();
   }, []);
+
+  useEffect(() => {
+    const selectedClient = clients.find(client => client._id === selectedClientId);
+    if (selectedClient) {
+      setFullName(selectedClient.name || '');
+      setPhoneNumber(selectedClient.telephone || '');
+      setEmailAddress(selectedClient.email || '');
+      setAddress(selectedClient.address || '');
+    } else {
+      // Réinitialiser les états si aucun client n'est sélectionné
+      setFullName('');
+      setPhoneNumber('');
+      setEmailAddress('');
+      setAddress('');
+    }
+  }, [selectedClientId, clients]);
+  
 
   const handleClientChange = (e) => {
     setSelectedClientId(e.target.value);
@@ -240,6 +263,7 @@ const Formulaire = () => {
                           type="text"
                           name="fullName"
                           id="fullName"
+                          value={fullName}
                           disabled={selectedClientId !== ""}
                         />
                       </div>
@@ -257,6 +281,7 @@ const Formulaire = () => {
                         type="text"
                         name="phoneNumber"
                         id="phoneNumber"
+                        value={phoneNumber}
                         disabled={selectedClientId !== ""}
                       />
                     </div>
@@ -300,6 +325,7 @@ const Formulaire = () => {
                         type="email"
                         name="emailAddress"
                         id="emailAddress"
+                        value={emailAddress}
                         disabled={selectedClientId !== ""}
                       />
                     </div>
@@ -315,6 +341,8 @@ const Formulaire = () => {
                       type="text"
                       name="address"
                       placeholder="Adresse du client"
+                      id="address"
+                      value={address}
                       disabled={selectedClientId !== ""}
                     />
                   </div>
