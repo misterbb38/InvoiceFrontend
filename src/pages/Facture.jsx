@@ -152,7 +152,7 @@ function Facture() {
                 <tr>
                   <th className="font-bold text-lg text-base-content">Nom du Client</th>
                   <th className="font-bold text-lg text-base-content">Date</th>
-                  <th className="font-bold text-lg text-base-content">Telephone</th>
+                  <th className="font-bold text-lg text-base-content"> Nº facture</th>
                   <th className="font-bold text-lg text-base-content">Total</th>
                   <th className="font-bold text-lg text-base-content">Status</th>
                   <th className="font-bold text-lg text-base-content">Actions</th>
@@ -163,7 +163,7 @@ function Facture() {
                   <tr key={facture._id}>
                     <td>{facture.client.name } </td>
                     <td>{new Date(facture.date).toLocaleDateString()}</td>
-                    <td>{facture.client.telephone}</td>
+                    <td>{facture.invoiceNumber}</td>
                     <td>{facture.total.toFixed(2)} {currency}</td>
                     {/* <td>{facture.status}</td> */}
 

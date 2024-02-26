@@ -127,6 +127,7 @@ const { textColor, fillColor } = statusColors[invoice.status];
         doc.setFont("helvetica", "bold");
         doc.setTextColor(userColor);
         doc.text(`${invoice.type}`, 140, 30);
+        doc.text(` Nº ${invoice.invoiceNumber}`, 165, 30);
         doc.setFontSize(15);
         doc.setFont("helvetica", "bold");
         doc.setTextColor(textColor);
