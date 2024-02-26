@@ -261,7 +261,14 @@ const { textColor, fillColor } = statusColors[invoice.status];
         // doc.text("Site Web : www.palabresak2.com, Tél : +221 77 871 25 11", 50, currentY + 18);
       
 
-        doc.save(`facture-${invoice._id}.pdf`);
+        // doc.save(`facture-${invoice._id}.pdf`);
+        const blob = doc.output('blob');
+        // Créez une URL à partir du blob
+        const url = URL.createObjectURL(blob);
+        // Ouvrez le PDF dans un nouvel onglet
+        window.open(url, '_blank');
+        // Optionnel : libérez l'URL du blob après ouverture
+        URL.revokeObjectURL(url);
         
     };
 
