@@ -1,67 +1,78 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import LogoText from '../../images/logo-et-slogan.jpg';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import LogoText from "../../images/logo-et-slogan.jpg";
 // import Logo from '../../images/logo/logo.svg';
 
 const SignUp = () => {
-  const [nom, setNom] = useState('');
-  const [prenom, setPrenom] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [nom, setNom] = useState("");
+  const [prenom, setPrenom] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
-  const [serverError, setServerError] = useState(''); // Ajout d'un état pour l'erreur serveur
+  const [passwordLengthError, setPasswordLengthError] = useState(false);
+  const [serverError, setServerError] = useState(""); // Ajout d'un état pour l'erreur serveur
   const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
 
   const navigate = useNavigate(); // Pour rediriger l'utilisateur après l'inscription
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
 
   useEffect(() => {
-      setPasswordError(password !== confirmPassword && confirmPassword.length > 0);
+    setPasswordError(
+      password !== confirmPassword && confirmPassword.length > 0
+    );
   }, [password, confirmPassword]);
 
   const submitHandler = async (e) => {
-      e.preventDefault();
-      setLoading(true);
-      setServerError('');
+    e.preventDefault();
+    setLoading(true);
+    setServerError("");
+    setPasswordError(false);
+    setPasswordLengthError(false); // Réinitialiser l'erreur de longueur du mot de passe
 
-      if (password !== confirmPassword) {
-          setPasswordError(true);
-          setLoading(false);
-          return;
+    if (password.length < 8) {
+      setPasswordLengthError(true); // Définir l'erreur si le mot de passe est trop court
+      setLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setPasswordError(true);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(`${apiUrl}/api/user/signup`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ nom, prenom, email, password }),
+      });
+
+      const data = await response.json(); // Toujours lire le JSON pour obtenir le message d'erreur potentiel
+
+      if (!response.ok) {
+        // Si la requête a échoué, utilise le message d'erreur du JSON
+        setServerError(
+          data.message || "Une erreur s'est produite lors de l'inscription"
+        );
+      } else {
+        // Stocker les informations de l'utilisateur dans localStorage
+        localStorage.setItem("userInfo", JSON.stringify(data));
+
+        console.log("Inscription réussie", data);
+        navigate("/signin"); // Rediriger automatiquement l'utilisateur vers le tableau de bord
       }
-
-      try {
-          const response = await fetch(`${apiUrl}/api/user/signup`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ nom, prenom, email, password }),
-          });
-
-          const data = await response.json(); // Toujours lire le JSON pour obtenir le message d'erreur potentiel
-
-          if (!response.ok) {
-              // Si la requête a échoué, utilise le message d'erreur du JSON
-              setServerError(data.message || "Une erreur s'est produite lors de l'inscription");
-          } else {
-              // Stocker les informations de l'utilisateur dans localStorage
-              localStorage.setItem('userInfo', JSON.stringify(data));
-
-              console.log('Inscription réussie', data);
-              navigate('/signin'); // Rediriger automatiquement l'utilisateur vers le tableau de bord
-          }
-      } catch (error) {
-          // Gérer les erreurs qui ne sont pas liées à la réponse HTTP, comme les problèmes de réseau
-          setServerError("Problème de connexion au serveur.");
-      } finally {
-          setLoading(false);
-      }
+    } catch (error) {
+      // Gérer les erreurs qui ne sont pas liées à la réponse HTTP, comme les problèmes de réseau
+      setServerError("Problème de connexion au serveur.");
+    } finally {
+      setLoading(false);
+    }
   };
-
-
 
   return (
     <>
@@ -73,18 +84,23 @@ const SignUp = () => {
                 <img className="hidden dark:block" src={Logo} alt="Logo" />
                 <img className="dark:hidden" src={LogoDark} alt="Logo" />
               </Link> */}
-              <h3><span className="text-blue-700 font-bold">Factu</span><span className="text-orange-500 font-bold">Flexe</span></h3>
+              <h3>
+                <span className="text-blue-700 font-bold">Factu</span>
+                <span className="text-orange-500 font-bold">Flexe</span>
+              </h3>
               <p className="2xl:px-20">
-              Simplifiez votre gestion de factures avec FactuFlex : inscrivez-vous et découvrez la liberté financière !
+                Simplifiez votre gestion de factures avec FactuFlex :
+                inscrivez-vous et découvrez la liberté financière !
               </p>
               <img className="hidden dark:block" src={LogoText} alt="Logo" />
-              
             </div>
           </div>
 
           <div className="w-full xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <span className="mb-1.5 block font-medium">Commencer gratuitement</span>
+              <span className="mb-1.5 block font-medium">
+                Commencer gratuitement
+              </span>
               <h2 className="mb-9 text-2xl font-bold font-content">
                 Ouvrir un compte Gratuitement
               </h2>
@@ -236,12 +252,17 @@ const SignUp = () => {
                       </svg>
                     </span>
                   </div>
+                  {passwordLengthError && (
+                    <div style={{ color: "red", marginTop: "10px" }}>
+                      Le mot de passe doit contenir au moins 8 caractères.
+                    </div>
+                  )}
                 </div>
                 {passwordError && (
-                <div style={{ color: 'red', marginTop: '10px' }}>
+                  <div style={{ color: "red", marginTop: "10px" }}>
                     Les mots de passe ne correspondent pas.
-                </div>
-            )}
+                  </div>
+                )}
 
                 <div className="mb-6">
                   <label className="mb-2.5 block font-medium base-content">
@@ -281,28 +302,25 @@ const SignUp = () => {
                   </div>
                 </div>
 
-               
-
                 <div className="mb-5">
-                {loading ? (
-                  <div className="flex justify-center items-center">
-                    <span className="loading loading-spinner text-primary"></span>
-                  </div>
-                ) : (
-                  <input
-                    type="submit"
-                    value="S'inscrire"
-                    disabled={password !== confirmPassword}
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                  {loading ? (
+                    <div className="flex justify-center items-center">
+                      <span className="loading loading-spinner text-primary"></span>
+                    </div>
+                  ) : (
+                    <input
+                      type="submit"
+                      value="S'inscrire"
+                      disabled={password !== confirmPassword}
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    />
                   )}
                 </div>
                 {serverError && (
-                <div style={{ color: 'red', marginTop: '10px' }}>
+                  <div style={{ color: "red", marginTop: "10px" }}>
                     {serverError} {/* Affichage de l'erreur serveur */}
-                </div>
-            )}
-                
+                  </div>
+                )}
 
                 {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
@@ -343,7 +361,7 @@ const SignUp = () => {
 
                 <div className="mt-6 text-center">
                   <p>
-                    Vous avez déjà un compte ?{' '}
+                    Vous avez déjà un compte ?{" "}
                     <Link to="/signin" className="text-primary">
                       Se connecter
                     </Link>

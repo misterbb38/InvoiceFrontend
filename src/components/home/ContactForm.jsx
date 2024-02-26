@@ -53,7 +53,7 @@ const ContactForm = () => {
               </iframe>
             </div>
             <h2 className="title-font text-2xl font-medium  mt-6 mb-3 text-base-content">Dakar, Sénégal</h2>
-            <p className="leading-relaxed text-base-content">+221 76-273-49-98</p>
+            <p className="leading-relaxed text-base-content">+221 784759032</p>
             <a className="text-indigo-500 inline-flex items-center mt-3">amady305@gmail.com</a>
           </div>
           <div className="sm:w-1/2 mb-10 px-4">
