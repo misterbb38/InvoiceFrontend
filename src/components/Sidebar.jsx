@@ -4,12 +4,15 @@ import  { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome,
+  
   faFileInvoiceDollar, // Icone pour Facture
   faFileAlt, // Icone pour Devis
-  faClipboardList,
-  faEnvelope, // Icone pour Formulair
-      faBook,
-       faCog } from '@fortawesome/free-solid-svg-icons';
+  faUsers, // Changé à faUsers pour Client
+  faClipboardList, // Icone pour Formulaire
+  faEnvelope, // Icone pour Message
+  faBook, // Icone pour Instruction
+  faCog // Icone pour Paramètre
+ } from '@fortawesome/free-solid-svg-icons';
 import logo from '../images/logo/logo.png'
 
 function Sidebar() {
@@ -19,10 +22,12 @@ function Sidebar() {
     { id: 1, label: 'Accueil', route: '/dash', icon: faHome },
     { id: 2, label: 'Facture', route: '/dash/Facture', icon: faFileInvoiceDollar },
     { id: 3, label: 'Devis', route: '/dash/Devis', icon: faFileAlt },
-    { id: 4, label: 'Formulaire', route: '/dash/Formulaire', icon: faClipboardList },
-    { id: 5, label: 'Instruction', route: '/dash/instruction', icon: faBook },
-    { id: 6, label: 'Message', route: '/dash/notification', icon: faEnvelope },
-    { id: 7, label: 'Parametre', route: '/dash/parametre', icon: faCog },
+    { id: 4, label: 'Client', route: '/dash/client', icon: faUsers },
+    { id: 5, label: 'Formulaire', route: '/dash/Formulaire', icon: faClipboardList },
+    { id: 6, label: 'Instruction', route: '/dash/instruction', icon: faBook },
+    { id: 7, label: 'Message', route: '/dash/notification', icon: faEnvelope },
+    { id: 8, label: 'Parametre', route: '/dash/parametre', icon: faCog },
+    
   ];
 
   const handleMenuItemClick = (id) => {

@@ -368,7 +368,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
         </div>
       )}
       {showToast && (
-        <div className="toast toast-end">
+        <div className="toast toast-center toast-middle">
           <div className="alert alert-success">
             <span>Modification réussie.</span>
           </div>
