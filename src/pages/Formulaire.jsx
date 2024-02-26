@@ -263,7 +263,7 @@ const [address, setAddress] = useState('');
                           type="text"
                           name="fullName"
                           id="fullName"
-                          value={fullName}
+                          placeholder={fullName}
                           disabled={selectedClientId !== ""}
                         />
                       </div>
@@ -281,7 +281,7 @@ const [address, setAddress] = useState('');
                         type="text"
                         name="phoneNumber"
                         id="phoneNumber"
-                        value={phoneNumber}
+                        placeholder={phoneNumber}
                         disabled={selectedClientId !== ""}
                       />
                     </div>
@@ -325,7 +325,7 @@ const [address, setAddress] = useState('');
                         type="email"
                         name="emailAddress"
                         id="emailAddress"
-                        value={emailAddress}
+                        placeholder={emailAddress}
                         disabled={selectedClientId !== ""}
                       />
                     </div>
@@ -340,9 +340,9 @@ const [address, setAddress] = useState('');
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
                       type="text"
                       name="address"
-                      placeholder="Adresse du client"
+                      
                       id="address"
-                      value={address}
+                      placeholder={address}
                       disabled={selectedClientId !== ""}
                     />
                   </div>
