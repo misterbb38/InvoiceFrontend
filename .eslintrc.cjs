@@ -28,5 +28,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     // Ajoutez ici d'autres règles spécifiques au projet au besoin
+    "react/no-unescaped-entities": ["error", {"forbid": ["<", ">", "{", "}"]}],
+    "react-hooks/exhaustive-deps": "off" // Ou "off" pour désactiver
   },
 }

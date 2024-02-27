@@ -132,12 +132,12 @@ function EditClientButton({ clientId, onClientUpdated }) {
         </div>
       )}
       {showToast && (
-                <div className="toast toast-center toast-middle">
-                    <div className='alert alert-success'>
-                        <span className="text-white"> Clientenregistré avec succes</span>
-                    </div>
-                </div>
-            )}
+        <div className="toast toast-center toast-end">
+          <div className="alert alert-success">
+            Client mis à jour avec succès.
+          </div>
+        </div>
+      )}
     </>
   );
 }

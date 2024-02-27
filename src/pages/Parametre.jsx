@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
 import userThree from "../images/user/user-03.png";
-import { data } from "autoprefixer";
+
 
 const Parametre = () => {
   const [user, setUser] = useState({

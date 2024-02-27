@@ -450,7 +450,7 @@ const [address, setAddress] = useState('');
                     
 
                     <button
-                      className="flex justify-center rounded font-bold btn btn-primary py-2 px-6 font-medium  hover:bg-opacity-70"
+                      className="flex justify-center rounded  btn btn-primary py-2 px-6 font-medium  hover:bg-opacity-70"
                       type="button"
                       onClick={ajouterArticle}
                     >
