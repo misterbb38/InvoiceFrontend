@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import jsPDF from 'jspdf'
 import PropTypes from 'prop-types'
-import logoLeft from '../images/logo1.png'
+import logoLeft from '../images/logo/logo.png'
 import logoRight from '../images/logo2.png'
 
 function GeneratePDFButton({ invoice, currency }) {
@@ -110,10 +110,25 @@ function GeneratePDFButton({ invoice, currency }) {
 
     // Ajout des logos et du texte central
     const imgLeft = new Image()
-    imgLeft.src = `${apiUrl}/${user.logo.replace(/\\/g, '/')}` || logoLeft
+    imgLeft.src = user.logo ? `${apiUrl}/${user.logo.replace(/\\/g, '/')}` : logoLeft
     const imgRight = new Image()
     imgRight.src = logoRight
-    doc.addImage(imgLeft, 'PNG', 20, 5, 30, 30)
+    // Dimensions originales de l'image
+    const imgWidth = imgLeft.width
+    const imgHeight = imgLeft.height
+    // Largeur maximale pour l'image dans le PDF
+    const maxWidth = 30 // Exemple : 35 unités de largeur dans le PDF
+
+    // Calcul du rapport hauteur/largeur de l'image
+    const ratio = imgWidth / imgHeight
+
+    // Calcul de la nouvelle hauteur en conservant le rapport hauteur/largeur
+    const newHeight = maxWidth / ratio
+
+    // Ajout de l'image au PDF avec les nouvelles dimensions
+    // La largeur est définie sur maxWidth et la hauteur est ajustée pour conserver le rapport
+    doc.addImage(imgLeft, 'PNG', 20, 5, maxWidth, newHeight)
+    //doc.addImage(imgLeft, 'PNG', 20, 5, 35, 30)
     // doc.addImage(imgRight, 'PNG', 140, 5, 60, 30)
     doc.setFontSize(20)
     doc.setFont('helvetica', 'bold')
