@@ -1,33 +1,33 @@
-import { useState, useEffect, useMemo } from "react";
-import ReactApexChart from "react-apexcharts";
-import UseFilteredStats from "../dataInvoice/UseFilteredStats";
+import { useState, useEffect, useMemo } from 'react'
+import ReactApexChart from 'react-apexcharts'
+import UseFilteredStats from '../dataInvoice/UseFilteredStats'
 
-const GraphFilter = () => { 
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
-  const [isLoading, setIsLoading] = useState(true); // Assurez-vous que la valeur initiale correspond à l'état de chargement initial
-  const filteredStats = UseFilteredStats({ year: selectedYear });
+const GraphFilter = () => {
+  const [selectedYear, setSelectedYear] = useState(
+    new Date().getFullYear().toString()
+  )
+  const [isLoading, setIsLoading] = useState(true) // Assurez-vous que la valeur initiale correspond à l'état de chargement initial
+  const filteredStats = UseFilteredStats({ year: selectedYear })
 
   // Calcul des séries pour le diagramme
   const chartSeries = useMemo(() => {
     return Object.keys(filteredStats || {}).map((status) => ({
       name: status,
       data: filteredStats[status]?.map((month) => month.totalAmount) || [],
-    }));
-  }, [filteredStats]);
+    }))
+  }, [filteredStats])
 
   useEffect(() => {
     // Détecte si filteredStats est en train d'être chargé
-    setIsLoading(!filteredStats); // Simplement basculer l'état de chargement basé sur la présence de filteredStats
-  }, [filteredStats]);
+    setIsLoading(!filteredStats) // Simplement basculer l'état de chargement basé sur la présence de filteredStats
+  }, [filteredStats])
 
   // Options pour ApexChart, avec activation de la fonctionnalité de téléchargement
   const chartOptions = {
     chart: {
-      type: "bar",
+      type: 'bar',
       height: 350,
-     
-      
-      
+
       toolbar: {
         show: true,
         tools: {
@@ -38,7 +38,7 @@ const GraphFilter = () => {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "55%",
+        columnWidth: '55%',
       },
     },
     dataLabels: {
@@ -47,14 +47,27 @@ const GraphFilter = () => {
     stroke: {
       show: true,
       width: 2,
-      colors: ["transparent"],
+      colors: ['transparent'],
     },
     xaxis: {
-      categories: ["Jan", "Fev", "Mar", "Avr", "Mai", "Jui", "Jul", "Aut", "Sep", "Oct", "Nov", "Dec"],
+      categories: [
+        'Jan',
+        'Fev',
+        'Mar',
+        'Avr',
+        'Mai',
+        'Jui',
+        'Jul',
+        'Aut',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ],
     },
     yaxis: {
       title: {
-        text: "Montant Total",
+        text: 'Montant Total',
       },
     },
     fill: {
@@ -63,7 +76,7 @@ const GraphFilter = () => {
     tooltip: {
       y: {
         formatter: function (val) {
-          return val + " Cfa";
+          return val + ' Cfa'
         },
       },
       fixed: {
@@ -71,9 +84,9 @@ const GraphFilter = () => {
       },
     },
     legend: {
-      position: "top",
+      position: 'top',
     },
-  };
+  }
 
   return (
     <div className="p-4 md:p-6 lg:p-8 rounded-lg shadow h-full">
@@ -83,13 +96,18 @@ const GraphFilter = () => {
           id="yearSelector"
           value={selectedYear}
           onChange={(e) => {
-            setIsLoading(true);
-            setSelectedYear(e.target.value);
+            setIsLoading(true)
+            setSelectedYear(e.target.value)
           }}
           className="ml-2 border-2"
         >
-          {Array.from(new Array(20), (_, index) => new Date().getFullYear() - index).map(year => (
-            <option key={year} value={year.toString()}>{year}</option>
+          {Array.from(
+            new Array(20),
+            (_, index) => new Date().getFullYear() - index
+          ).map((year) => (
+            <option key={year} value={year.toString()}>
+              {year}
+            </option>
           ))}
         </select>
       </div>
@@ -106,7 +124,7 @@ const GraphFilter = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default GraphFilter;
+export default GraphFilter

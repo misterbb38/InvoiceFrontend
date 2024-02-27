@@ -1,38 +1,38 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 
 function EditFactureButton({ factureId, onFactureUpdated }) {
-  const [showModal, setShowModal] = useState(false);
-  const [showToast, setShowToast] = useState(false);
+  const [showModal, setShowModal] = useState(false)
+  const [showToast, setShowToast] = useState(false)
   const [formData, setFormData] = useState({
-    clientName: "",
-    clientAddress: "",
-    clientEmail: "",
-    clientTelephone: "",
+    clientName: '',
+    clientAddress: '',
+    clientEmail: '',
+    clientTelephone: '',
     items: [],
-    date: "",
+    date: '',
     total: 0,
-    type: "",
-    status: "",
-  });
-  const [formErrors, setFormErrors] = useState({});
+    type: '',
+    status: '',
+  })
+  const [formErrors, setFormErrors] = useState({})
 
-  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
   useEffect(() => {
     if (showModal) {
       const fetchFactureData = async () => {
         try {
-          const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-          const token = userInfo?.token;
+          const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+          const token = userInfo?.token
           const response = await fetch(`${apiUrl}/api/invoice/${factureId}`, {
             method: 'GET',
             headers: {
-              'Authorization': `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+              Authorization: `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
               'Content-Type': 'application/json',
             },
-          });
-          const data = await response.json();
+          })
+          const data = await response.json()
           if (data.success) {
             setFormData({
               clientName: data.data.client.name,
@@ -40,86 +40,86 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
               clientEmail: data.data.client.email,
               clientTelephone: data.data.client.telephone,
               items: data.data.items,
-              date: new Date(data.data.date).toISOString().split("T")[0],
+              date: new Date(data.data.date).toISOString().split('T')[0],
               total: data.data.total,
               type: data.data.type,
               status: data.data.status,
-            });
+            })
           }
         } catch (error) {
-          console.error("Erreur lors de la récupération de la facture:", error);
+          console.error('Erreur lors de la récupération de la facture:', error)
         }
-      };
-      fetchFactureData();
+      }
+      fetchFactureData()
     }
-  }, [showModal, factureId]);
+  }, [showModal, factureId])
 
   const handleChange = (e, index) => {
-    if (e.target.name.startsWith("item-")) {
-      const items = [...formData.items];
-      const itemKey = e.target.name.split("-")[1]; // ex: "ref", "description"
-      items[index][itemKey] = e.target.value;
+    if (e.target.name.startsWith('item-')) {
+      const items = [...formData.items]
+      const itemKey = e.target.name.split('-')[1] // ex: "ref", "description"
+      items[index][itemKey] = e.target.value
 
       // Calcul automatique du total pour l'article
-    if (itemKey === "quantity" || itemKey === "price") {
-      const quantity = items[index].quantity || 0;
-      const price = items[index].price || 0;
-      items[index].total = quantity * price;
-    }
+      if (itemKey === 'quantity' || itemKey === 'price') {
+        const quantity = items[index].quantity || 0
+        const price = items[index].price || 0
+        items[index].total = quantity * price
+      }
 
-      setFormData({ ...formData, items });
+      setFormData({ ...formData, items })
     } else {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
+      setFormData({ ...formData, [e.target.name]: e.target.value })
     }
-  };
+  }
 
   const validateForm = () => {
-    let errors = {};
+    let errors = {}
 
     // Validation des champs selon les règles du modèle
     if (!formData.clientName)
-      errors.clientName = "Le nom du client est obligatoire";
+      errors.clientName = 'Le nom du client est obligatoire'
     if (!formData.clientAddress)
-      errors.clientAddress = "L'adresse du client est obligatoire";
+      errors.clientAddress = "L'adresse du client est obligatoire"
     if (!formData.clientTelephone)
-      errors.clientTelephone = "Le numéro du client est obligatoire";
+      errors.clientTelephone = 'Le numéro du client est obligatoire'
 
     if (!formData.type)
-      errors.clientTelephone = "Le numéro du client est obligatoire";
+      errors.clientTelephone = 'Le numéro du client est obligatoire'
 
     formData.items.forEach((item, index) => {
       if (!item.ref)
-        errors[`item-ref-${index}`] = "La référence est obligatoire";
+        errors[`item-ref-${index}`] = 'La référence est obligatoire'
       if (!item.description)
-        errors[`item-description-${index}`] = "La description est obligatoire";
+        errors[`item-description-${index}`] = 'La description est obligatoire'
       if (item.quantity <= 0)
         errors[`item-quantity-${index}`] =
-          "La quantité ne peut pas être négative ou egal a 0";
+          'La quantité ne peut pas être négative ou egal a 0'
       if (item.price < 0)
-        errors[`item-price-${index}`] = "Le prix ne peut pas être négatif";
+        errors[`item-price-${index}`] = 'Le prix ne peut pas être négatif'
       if (!item.total)
-        errors[`item-total-${index}`] = "Le total est obligatoire";
-    });
+        errors[`item-total-${index}`] = 'Le total est obligatoire'
+    })
 
-    return errors;
-  };
+    return errors
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const errors = validateForm();
-    setFormErrors(errors);
+    e.preventDefault()
+    const errors = validateForm()
+    setFormErrors(errors)
 
     if (Object.keys(errors).length === 0) {
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      setShowToast(true)
+      setTimeout(() => setShowToast(false), 3000)
       try {
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-        const token = userInfo?.token;
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+        const token = userInfo?.token
         const response = await fetch(`${apiUrl}/api/invoice/${factureId}`, {
-          method: "PUT",
+          method: 'PUT',
           headers: {
-            "Content-Type": "application/json",
-            'Authorization': `Bearer ${token}`
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             client: {
@@ -127,58 +127,54 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
               address: formData.clientAddress,
               email: formData.clientEmail,
               telephone: formData.clientTelephone,
-              
             },
             items: formData.items,
             date: formData.date,
-            
+
             type: formData.type,
             status: formData.status,
           }),
-        });
-        const data = await response.json();
+        })
+        const data = await response.json()
         if (data.success) {
-          setShowModal(false);
-          onFactureUpdated();
+          setShowModal(false)
+          onFactureUpdated()
         }
       } catch (error) {
-        console.error("Erreur lors de la mise à jour de la facture:", error);
+        console.error('Erreur lors de la mise à jour de la facture:', error)
       }
     }
-  };
+  }
 
   const renderError = (fieldName) => {
     return (
       formErrors[fieldName] && (
         <div className="text-red-500 text-xs">{formErrors[fieldName]}</div>
       )
-    );
-  };
+    )
+  }
 
   const handleDeleteItem = (index) => {
-    const updatedItems = formData.items.filter((_, i) => i !== index);
-    setFormData({ ...formData, items: updatedItems });
-  };
+    const updatedItems = formData.items.filter((_, i) => i !== index)
+    setFormData({ ...formData, items: updatedItems })
+  }
 
   // Modèle pour un nouvel article
   const newArticleModel = {
-    ref: "",
-    description: "",
+    ref: '',
+    description: '',
     quantity: 1,
     price: 0,
     total: 0,
-  };
+  }
 
   const handleAddItem = () => {
-    setFormData({ ...formData, items: [...formData.items, newArticleModel] });
-  };
+    setFormData({ ...formData, items: [...formData.items, newArticleModel] })
+  }
 
   return (
     <>
-      <button
-        className="btn btn-secondary "
-        onClick={() => setShowModal(true)}
-      >
+      <button className="btn btn-secondary " onClick={() => setShowModal(true)}>
         Éditer
       </button>
       {showModal && (
@@ -198,7 +194,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
                   onChange={handleChange}
                   placeholder="Nom du client"
                 />
-                {renderError("clientName")}
+                {renderError('clientName')}
               </div>
 
               {/* Champ Adresse du client */}
@@ -214,7 +210,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
                   onChange={handleChange}
                   placeholder="Adresse du client"
                 />
-                {renderError("clientAddress")}
+                {renderError('clientAddress')}
               </div>
 
               {/* Champ Email du client */}
@@ -230,7 +226,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
                   onChange={handleChange}
                   placeholder="Email du client"
                 />
-                {renderError("clientEmail")}
+                {renderError('clientEmail')}
               </div>
 
               {/* Sélecteur de statut après le champ Email */}
@@ -248,7 +244,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
                   <option value="Payée">Payée</option>
                   <option value="Annullée">Annulée</option>
                 </select>
-                {renderError("status")}
+                {renderError('status')}
               </div>
 
               {/* Champ Téléphone du client */}
@@ -264,7 +260,7 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
                   onChange={handleChange}
                   placeholder="Téléphone du client"
                 />
-                {renderError("clientTelephone")}
+                {renderError('clientTelephone')}
               </div>
 
               {/* ... Autres champs et gestion des articles avec affichage des erreurs */}
@@ -375,12 +371,12 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
         </div>
       )}
     </>
-  );
+  )
 }
 
 EditFactureButton.propTypes = {
   factureId: PropTypes.string.isRequired,
   onFactureUpdated: PropTypes.func.isRequired,
-};
+}
 
-export default EditFactureButton;
+export default EditFactureButton

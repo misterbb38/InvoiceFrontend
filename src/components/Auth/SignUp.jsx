@@ -1,78 +1,76 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-import LogoText from "../../images/logo-et-slogan.jpg";
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import LogoText from '../../images/logo-et-slogan.jpg'
 // import Logo from '../../images/logo/logo.svg';
 
 const SignUp = () => {
-  const [nom, setNom] = useState("");
-  const [prenom, setPrenom] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
-  const [passwordLengthError, setPasswordLengthError] = useState(false);
-  const [serverError, setServerError] = useState(""); // Ajout d'un état pour l'erreur serveur
-  const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
+  const [nom, setNom] = useState('')
+  const [prenom, setPrenom] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordError, setPasswordError] = useState(false)
+  const [passwordLengthError, setPasswordLengthError] = useState(false)
+  const [serverError, setServerError] = useState('') // Ajout d'un état pour l'erreur serveur
+  const [loading, setLoading] = useState(false) // Ajout d'un état pour le chargement
 
-  const navigate = useNavigate(); // Pour rediriger l'utilisateur après l'inscription
-  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+  const navigate = useNavigate() // Pour rediriger l'utilisateur après l'inscription
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
   useEffect(() => {
-    setPasswordError(
-      password !== confirmPassword && confirmPassword.length > 0
-    );
-  }, [password, confirmPassword]);
+    setPasswordError(password !== confirmPassword && confirmPassword.length > 0)
+  }, [password, confirmPassword])
 
   const submitHandler = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setServerError("");
-    setPasswordError(false);
-    setPasswordLengthError(false); // Réinitialiser l'erreur de longueur du mot de passe
+    e.preventDefault()
+    setLoading(true)
+    setServerError('')
+    setPasswordError(false)
+    setPasswordLengthError(false) // Réinitialiser l'erreur de longueur du mot de passe
 
     if (password.length < 8) {
-      setPasswordLengthError(true); // Définir l'erreur si le mot de passe est trop court
-      setLoading(false);
-      return;
+      setPasswordLengthError(true) // Définir l'erreur si le mot de passe est trop court
+      setLoading(false)
+      return
     }
 
     if (password !== confirmPassword) {
-      setPasswordError(true);
-      setLoading(false);
-      return;
+      setPasswordError(true)
+      setLoading(false)
+      return
     }
 
     try {
       const response = await fetch(`${apiUrl}/api/user/signup`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ nom, prenom, email, password }),
-      });
+      })
 
-      const data = await response.json(); // Toujours lire le JSON pour obtenir le message d'erreur potentiel
+      const data = await response.json() // Toujours lire le JSON pour obtenir le message d'erreur potentiel
 
       if (!response.ok) {
         // Si la requête a échoué, utilise le message d'erreur du JSON
         setServerError(
           data.message || "Une erreur s'est produite lors de l'inscription"
-        );
+        )
       } else {
         // Stocker les informations de l'utilisateur dans localStorage
-        localStorage.setItem("userInfo", JSON.stringify(data));
+        localStorage.setItem('userInfo', JSON.stringify(data))
 
-        console.log("Inscription réussie", data);
-        navigate("/signin"); // Rediriger automatiquement l'utilisateur vers le tableau de bord
+        console.log('Inscription réussie', data)
+        navigate('/signin') // Rediriger automatiquement l'utilisateur vers le tableau de bord
       }
     } catch (error) {
       // Gérer les erreurs qui ne sont pas liées à la réponse HTTP, comme les problèmes de réseau
-      setServerError("Problème de connexion au serveur.");
+      setServerError('Problème de connexion au serveur.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -253,13 +251,13 @@ const SignUp = () => {
                     </span>
                   </div>
                   {passwordLengthError && (
-                    <div style={{ color: "red", marginTop: "10px" }}>
+                    <div style={{ color: 'red', marginTop: '10px' }}>
                       Le mot de passe doit contenir au moins 8 caractères.
                     </div>
                   )}
                 </div>
                 {passwordError && (
-                  <div style={{ color: "red", marginTop: "10px" }}>
+                  <div style={{ color: 'red', marginTop: '10px' }}>
                     Les mots de passe ne correspondent pas.
                   </div>
                 )}
@@ -317,7 +315,7 @@ const SignUp = () => {
                   )}
                 </div>
                 {serverError && (
-                  <div style={{ color: "red", marginTop: "10px" }}>
+                  <div style={{ color: 'red', marginTop: '10px' }}>
                     {serverError} {/* Affichage de l'erreur serveur */}
                   </div>
                 )}
@@ -361,7 +359,7 @@ const SignUp = () => {
 
                 <div className="mt-6 text-center">
                   <p>
-                    Vous avez déjà un compte ?{" "}
+                    Vous avez déjà un compte ?{' '}
                     <Link to="/signin" className="text-primary">
                       Se connecter
                     </Link>
@@ -373,7 +371,7 @@ const SignUp = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp

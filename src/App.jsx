@@ -1,29 +1,27 @@
-import { useState, useEffect } from 'react';
-import { themeChange } from 'theme-change';
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute'; // Assurez-vous d'importer ProtectedRoute
-import TopBar from './components/TopBar';
-import Sidebar from './components/Sidebar';
-import SignIn from './components/Auth/SignIn';
-import SignUp from './components/Auth/SignUp';
-import HomeContent from './components/index';
-import Facture from './pages/Facture';
-import Devis from './pages/Devis';
-import Formulaire from './pages/Formulaire';
-import Instruction from './pages/Instruction';
-import Parametre from './pages/Parametre';
-import ClientList from './pages/ClientList';
-import Home from './pages/home';
-import GenerateAccessKey from './components/GenerateAccessKey';
-import KeyExpired from './components/KeyExpired';
-import Notifications from './components/Notifications';
-
-
+import { useState, useEffect } from 'react'
+import { themeChange } from 'theme-change'
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+import ProtectedRoute from './components/ProtectedRoute' // Assurez-vous d'importer ProtectedRoute
+import TopBar from './components/TopBar'
+import Sidebar from './components/Sidebar'
+import SignIn from './components/Auth/SignIn'
+import SignUp from './components/Auth/SignUp'
+import HomeContent from './components/index'
+import Facture from './pages/Facture'
+import Devis from './pages/Devis'
+import Formulaire from './pages/Formulaire'
+import Instruction from './pages/Instruction'
+import Parametre from './pages/Parametre'
+import ClientList from './pages/ClientList'
+import Home from './pages/home'
+import GenerateAccessKey from './components/GenerateAccessKey'
+import KeyExpired from './components/KeyExpired'
+import Notifications from './components/Notifications'
 
 function AppLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
-  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen)
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -35,20 +33,20 @@ function AppLayout() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function App() {
-  useEffect(() => themeChange(false), []);
+  useEffect(() => themeChange(false), [])
 
   return (
     <BrowserRouter>
       <Routes>
-      <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
-        
+
         <Route path="/signup" element={<SignUp />} />
-        <Route element={<ProtectedRoute />}>  
+        <Route element={<ProtectedRoute />}>
           <Route path="/keyGen" element={<GenerateAccessKey />} />
           <Route path="/key" element={<KeyExpired />} />
           <Route path="/dash" element={<AppLayout />}>
@@ -59,13 +57,13 @@ function App() {
 
             <Route path="Formulaire" element={<Formulaire />} />
             <Route path="instruction" element={<Instruction />} />
-            <Route path='notification' element={<Notifications />} />
+            <Route path="notification" element={<Notifications />} />
             <Route path="parametre" element={<Parametre />} />
           </Route>
         </Route>
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
-export default App;
+export default App

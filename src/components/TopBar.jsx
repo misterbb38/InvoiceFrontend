@@ -1,107 +1,107 @@
-import { useState, useEffect } from "react";
-import PropTypes from "prop-types";
+import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import {
   FiMenu,
   FiChevronLeft,
   FiSearch,
   FiBell,
   FiSettings,
-} from "react-icons/fi";
-import UserPhoto from "../assets/icone/react.svg";
-import { useNavigate } from "react-router-dom"; // Importer useNavigate
+} from 'react-icons/fi'
+import UserPhoto from '../assets/icone/react.svg'
+import { useNavigate } from 'react-router-dom' // Importer useNavigate
 
-const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
 function TopBar({ toggleSidebar, isSidebarOpen }) {
-  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
+  const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false)
 
-  const [unreadCount, setUnreadCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0)
   // const [error, setError] = useState('');
   // const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate(); // Hook pour naviguer
+  const navigate = useNavigate() // Hook pour naviguer
 
   const [user, setUser] = useState({
-    nom: "",
-    prenom: "",
-    email: "",
-    telephone: "",
-    devise: "",
-    logo: "",
-    token: "",
-  });
+    nom: '',
+    prenom: '',
+    email: '',
+    telephone: '',
+    devise: '',
+    logo: '',
+    token: '',
+  })
 
   useEffect(() => {
     // Charger les données utilisateur depuis localStorage au chargement du composant
-    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
     setUser({
-      nom: userInfo.nom || "",
-      prenom: userInfo.prenom || "",
-      email: userInfo.email || "",
-      telephone: userInfo.telephone || "",
-      devise: userInfo.devise || "",
-      logo: userInfo.logo || "", // Initialiser avec le chemin de l'image stockée
-      nomEntreprise: userInfo.nomEntreprise || "",
+      nom: userInfo.nom || '',
+      prenom: userInfo.prenom || '',
+      email: userInfo.email || '',
+      telephone: userInfo.telephone || '',
+      devise: userInfo.devise || '',
+      logo: userInfo.logo || '', // Initialiser avec le chemin de l'image stockée
+      nomEntreprise: userInfo.nomEntreprise || '',
       token: userInfo?.token,
       userId: userInfo?._id,
-    });
-  }, []);
+    })
+  }, [])
 
   useEffect(() => {
-    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    const token = userInfo?.token;
+    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+    const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+    const token = userInfo?.token
 
     const fetchUnreadNotificationsCount = async () => {
       try {
         const response = await fetch(`${apiUrl}/api/notification/countUnread`, {
-          method: "GET",
+          method: 'GET',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-        });
+        })
 
         if (!response.ok) {
-          throw new Error("Failed to fetch unread notifications count");
+          throw new Error('Failed to fetch unread notifications count')
         }
 
-        const data = await response.json();
-        setUnreadCount(data.unreadCount);
+        const data = await response.json()
+        setUnreadCount(data.unreadCount)
       } catch (error) {
         console.error(
-          "Erreur lors de la récupération du nombre de notifications non lues: ",
+          'Erreur lors de la récupération du nombre de notifications non lues: ',
           error.message
-        );
+        )
       }
-    };
+    }
 
     const handleUpdateUnreadCount = () => {
-      fetchUnreadNotificationsCount();
-    };
+      fetchUnreadNotificationsCount()
+    }
 
     // Ajouter l'écouteur d'événements
     document.addEventListener(
-      "updateUnreadNotificationsCount",
+      'updateUnreadNotificationsCount',
       handleUpdateUnreadCount
-    );
+    )
 
     // Initial fetch
-    fetchUnreadNotificationsCount();
+    fetchUnreadNotificationsCount()
 
     // Nettoyage de l'écouteur d'événements
     return () => {
       document.removeEventListener(
-        "updateUnreadNotificationsCount",
+        'updateUnreadNotificationsCount',
         handleUpdateUnreadCount
-      );
-    };
-  }, []);
+      )
+    }
+  }, [])
 
   const handleLogout = () => {
-    localStorage.clear(); // Vide localStorage
-    navigate("/signin"); // Redirige vers la page de connexion
-  };
+    localStorage.clear() // Vide localStorage
+    navigate('/signin') // Redirige vers la page de connexion
+  }
 
   return (
     <div className="flex items-center justify-between bg-base-300 p-4 shadow">
@@ -125,7 +125,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
           <FiBell
             className="cursor-pointer text-base-content"
             size={24}
-            onClick={() => navigate("/dash/notification")} // Naviguez vers la page de notifications au clic
+            onClick={() => navigate('/dash/notification')} // Naviguez vers la page de notifications au clic
           />
           {/* {unreadCount > 0 && (
     <span className="indicator-item badge badge-secondary">{unreadCount}</span>
@@ -160,10 +160,41 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
         </div>
 
         <label className="  lg:hidden cursor-pointer grid place-items-center">
-  <input type="checkbox" value="synthwave" className="toggle theme-controller bg-base-content row-start-1 col-start-1 col-span-2"/>
-  <svg className="col-start-1 row-start-1 stroke-base-100 fill-base-100" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>
-  <svg className="col-start-2 row-start-1 stroke-base-100 fill-base-100" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-</label>
+          <input
+            type="checkbox"
+            value="synthwave"
+            className="toggle theme-controller bg-base-content row-start-1 col-start-1 col-span-2"
+          />
+          <svg
+            className="col-start-1 row-start-1 stroke-base-100 fill-base-100"
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="5" />
+            <path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" />
+          </svg>
+          <svg
+            className="col-start-2 row-start-1 stroke-base-100 fill-base-100"
+            xmlns="http://www.w3.org/2000/svg"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </label>
 
         {/* Informations de l'utilisateur uniquement pour les écrans plus grands */}
 
@@ -278,7 +309,7 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
             </ul>
           </div>
           <img
-            src={`${apiUrl}/${user.logo.replace(/\\/g, "/")}` || UserPhoto}
+            src={`${apiUrl}/${user.logo.replace(/\\/g, '/')}` || UserPhoto}
             alt="User"
             className="h-8 w-8 rounded-full"
           />
@@ -291,12 +322,12 @@ function TopBar({ toggleSidebar, isSidebarOpen }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 TopBar.propTypes = {
   toggleSidebar: PropTypes.func.isRequired,
   isSidebarOpen: PropTypes.bool.isRequired,
-};
+}
 
-export default TopBar;
+export default TopBar

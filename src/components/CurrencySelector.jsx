@@ -1,5 +1,5 @@
 // components/CurrencySelector.js
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
 
 const CurrencySelector = ({ currency, setCurrency }) => {
   return (
@@ -18,12 +18,12 @@ const CurrencySelector = ({ currency, setCurrency }) => {
         {/* Ajoutez d'autres options de devise selon le besoin */}
       </select>
     </div>
-  );
-};
+  )
+}
 
 CurrencySelector.propTypes = {
   currency: PropTypes.string.isRequired,
   setCurrency: PropTypes.func.isRequired,
-};
+}
 
-export default CurrencySelector;
+export default CurrencySelector

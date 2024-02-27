@@ -3,8 +3,6 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
-
-
 /* Ajoutez votre propre style ici si nécessaire */
 :root {
   --background-light: #ffffff;

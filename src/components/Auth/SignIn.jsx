@@ -1,66 +1,67 @@
-import  { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import LogoText from '../../images/logo-et-slogan.jpg';
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import LogoText from '../../images/logo-et-slogan.jpg'
 // import Logo from '../../images/logo/logo.png';
 
 const SignIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // Ajout d'un état pour le chargement
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false) // Ajout d'un état pour le chargement
+  const navigate = useNavigate()
 
-
-  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true); // Début du chargement
+    e.preventDefault()
+    setLoading(true) // Début du chargement
     try {
       const response = await fetch(`${apiUrl}/api/user/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
-      });
-  
+      })
+
       if (!response.ok) {
-        throw new Error('Échec de la connexion. Veuillez vérifier vos identifiants.');
+        throw new Error(
+          'Échec de la connexion. Veuillez vérifier vos identifiants.'
+        )
       }
-  
-      const data = await response.json();
-      setLoading(false); // Arrêt du chargement
-  
+
+      const data = await response.json()
+      setLoading(false) // Arrêt du chargement
+
       // Stocker les infos de l'utilisateur et le token dans localStorage
-      localStorage.setItem('userInfo', JSON.stringify(data));
+      localStorage.setItem('userInfo', JSON.stringify(data))
       console.log(data)
-  
-      const currentDate = new Date();
-const expirationDate = new Date(data.dateExpiration);
-const daysUntilExpiration = (expirationDate - currentDate) / (1000 * 3600 * 24);
 
-if (data.userType === 'simple') {
-  if (currentDate <= expirationDate) {
-    if (daysUntilExpiration <= 7) {
-      // Si l'abonnement expire dans 7 jours ou moins, rediriger vers /key
-      navigate('/key');
-    } else {
-      // Sinon, continuer vers /dash
-      navigate('/dash');
-    }
-  } else {
-    // Si la date d'expiration est passée, rediriger vers /key
-    navigate('/key');
-  }
-} else {
-  // Pour les autres types d'utilisateurs, rediriger vers /KeyGen
-  navigate('/KeyGen');
-}
+      const currentDate = new Date()
+      const expirationDate = new Date(data.dateExpiration)
+      const daysUntilExpiration =
+        (expirationDate - currentDate) / (1000 * 3600 * 24)
 
+      if (data.userType === 'simple') {
+        if (currentDate <= expirationDate) {
+          if (daysUntilExpiration <= 7) {
+            // Si l'abonnement expire dans 7 jours ou moins, rediriger vers /key
+            navigate('/key')
+          } else {
+            // Sinon, continuer vers /dash
+            navigate('/dash')
+          }
+        } else {
+          // Si la date d'expiration est passée, rediriger vers /key
+          navigate('/key')
+        }
+      } else {
+        // Pour les autres types d'utilisateurs, rediriger vers /KeyGen
+        navigate('/KeyGen')
+      }
     } catch (error) {
-      setError(error.message);
+      setError(error.message)
     } finally {
-      setLoading(false); // Fin du chargement
+      setLoading(false) // Fin du chargement
     }
-  };
+  }
 
   return (
     <>
@@ -70,21 +71,21 @@ if (data.userType === 'simple') {
             <div className="py-17.5 px-26 text-center">
               <Link className="mb-5.5 inline-block" to="/">
                 {/* <img className="hidden dark:block" src={Logo} alt="Logo" /> */}
-                
               </Link>
-              <p className="2xl:px-20">
-                
-              </p>
+              <p className="2xl:px-20"></p>
               <img className="hidden dark:block " src={LogoText} alt="Logo" />
             </div>
           </div>
 
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <span className="mb-1.5 block font-medium">Commencez gratuitement</span>
+              <span className="mb-1.5 block font-medium">
+                Commencez gratuitement
+              </span>
               <h2 className="mb-9 text-2xl font-bold base-content">
-                Connectez-vous à <span className="text-blue-700 font-bold">Factu</span><span className="text-orange-500 font-bold">Flexe</span>
-
+                Connectez-vous à{' '}
+                <span className="text-blue-700 font-bold">Factu</span>
+                <span className="text-orange-500 font-bold">Flexe</span>
               </h2>
 
               <form onSubmit={handleSubmit}>
@@ -127,7 +128,7 @@ if (data.userType === 'simple') {
                     className="btn btn-primary w-full"
                   />
                 )}
-               <div className="mt-6 text-center">
+                <div className="mt-6 text-center">
                   <p>
                     Vous n avez pas de compte ?{' '}
                     <Link to="/signup" className="text-primary">
@@ -141,7 +142,7 @@ if (data.userType === 'simple') {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn

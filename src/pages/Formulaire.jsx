@@ -1,120 +1,121 @@
-import { useState, useEffect } from "react";
-import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
-import AddClientForm from "../components/AddClientForm";
-import UploadExcelButton from "../components/UploadExcelButton";
+import { useState, useEffect } from 'react'
+import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
+import AddClientForm from '../components/AddClientForm'
+import UploadExcelButton from '../components/UploadExcelButton'
 
 const Formulaire = () => {
-  const [selectedClientId, setSelectedClientId] = useState("");
-  const [clients, setClients] = useState([]);
-  const [articles, setArticles] = useState([]);
-  const [type, setType] = useState("facture"); // 'facture' par défaut
-  const [status, setStatus] = useState("Attente"); // 'pending' par défaut
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(true);
+  const [selectedClientId, setSelectedClientId] = useState('')
+  const [clients, setClients] = useState([])
+  const [articles, setArticles] = useState([])
+  const [type, setType] = useState('facture') // 'facture' par défaut
+  const [status, setStatus] = useState('Attente') // 'pending' par défaut
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(true)
 
-  const [fullName, setFullName] = useState('');
-const [phoneNumber, setPhoneNumber] = useState('');
-const [emailAddress, setEmailAddress] = useState('');
-const [address, setAddress] = useState('');
+  const [fullName, setFullName] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
+  const [emailAddress, setEmailAddress] = useState('')
+  const [address, setAddress] = useState('')
 
-  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
   useEffect(() => {
     const fetchClients = async () => {
-      const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
-      const token = userInfo?.token; // Récupérer le token depuis le stockage local
+      const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
+      const token = userInfo?.token // Récupérer le token depuis le stockage local
       try {
         const response = await fetch(`${apiUrl}/api/client`, {
           method: 'GET',
           headers: {
-            'Authorization': `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+            Authorization: `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
             'Content-Type': 'application/json',
           },
-        });
-        const data = await response.json();
+        })
+        const data = await response.json()
         if (data && data.success && data.data) {
-          setClients(data.data); // Accès aux clients via la propriété data
-          console.log("Clients chargés:", data.data); // Ajoutez ceci pour le diagnostic
+          setClients(data.data) // Accès aux clients via la propriété data
+          console.log('Clients chargés:', data.data) // Ajoutez ceci pour le diagnostic
         } else {
           // Gérer le cas où data ou data.data n'existe pas
-          console.error("Aucun client trouvé dans la réponse");
+          console.error('Aucun client trouvé dans la réponse')
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération des clients:", error);
+        console.error('Erreur lors de la récupération des clients:', error)
       }
-    };
+    }
 
-    fetchClients();
-  }, []);
+    fetchClients()
+  }, [])
 
   useEffect(() => {
-    const selectedClient = clients.find(client => client._id === selectedClientId);
+    const selectedClient = clients.find(
+      (client) => client._id === selectedClientId
+    )
     if (selectedClient) {
-      setFullName(selectedClient.name || '');
-      setPhoneNumber(selectedClient.telephone || '');
-      setEmailAddress(selectedClient.email || '');
-      setAddress(selectedClient.address || '');
+      setFullName(selectedClient.name || '')
+      setPhoneNumber(selectedClient.telephone || '')
+      setEmailAddress(selectedClient.email || '')
+      setAddress(selectedClient.address || '')
     } else {
       // Réinitialiser les états si aucun client n'est sélectionné
-      setFullName('');
-      setPhoneNumber('');
-      setEmailAddress('');
-      setAddress('');
+      setFullName('')
+      setPhoneNumber('')
+      setEmailAddress('')
+      setAddress('')
     }
-  }, [selectedClientId, clients]);
-  
+  }, [selectedClientId, clients])
 
   const handleClientChange = (e) => {
-    setSelectedClientId(e.target.value);
-    console.log("ID de client sélectionné:", e.target.value); // Pour diagnostic
-  };
+    setSelectedClientId(e.target.value)
+    console.log('ID de client sélectionné:', e.target.value) // Pour diagnostic
+  }
 
   const ajouterArticle = () => {
     setArticles([
       ...articles,
-      { ref: "", description: "", quantite: "", prixUnitaire: "", total: "" },
-    ]);
-  };
+      { ref: '', description: '', quantite: '', prixUnitaire: '', total: '' },
+    ])
+  }
 
-   // Fonction pour supprimer un article
-   const supprimerArticle = (indexASupprimer) => {
-    setArticles(articles.filter((_, index) => index !== indexASupprimer));
-  };
+  // Fonction pour supprimer un article
+  const supprimerArticle = (indexASupprimer) => {
+    setArticles(articles.filter((_, index) => index !== indexASupprimer))
+  }
 
   const handleChangeArticle = (index, e) => {
     const updatedArticles = articles.map((article, i) => {
       if (i === index) {
-        const newArticle = { ...article, [e.target.name]: e.target.value };
+        const newArticle = { ...article, [e.target.name]: e.target.value }
 
-        if (e.target.name === "quantite" || e.target.name === "prixUnitaire") {
+        if (e.target.name === 'quantite' || e.target.name === 'prixUnitaire') {
           const quantite =
-            e.target.name === "quantite"
+            e.target.name === 'quantite'
               ? Number(e.target.value)
-              : Number(article.quantite);
+              : Number(article.quantite)
           const prixUnitaire =
-            e.target.name === "prixUnitaire"
+            e.target.name === 'prixUnitaire'
               ? Number(e.target.value)
-              : Number(article.prixUnitaire);
-          newArticle.total = quantite * prixUnitaire;
+              : Number(article.prixUnitaire)
+          newArticle.total = quantite * prixUnitaire
         }
 
-        return newArticle;
+        return newArticle
       }
-      return article;
-    });
-    setArticles(updatedArticles);
-  };
+      return article
+    })
+    setArticles(updatedArticles)
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
-    const token = userInfo?.token; // S'assurer d'utiliser le token actuel
+    e.preventDefault()
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
+    const token = userInfo?.token // S'assurer d'utiliser le token actuel
 
     const clientSelectionne = clients.find(
       (client) => client._id === selectedClientId
-    );
-    console.log("Client sélectionné:", clientSelectionne); // Pour diagnostic
+    )
+    console.log('Client sélectionné:', clientSelectionne) // Pour diagnostic
 
     const invoiceData = {
       Client: clientSelectionne ? clientSelectionne._id : null,
@@ -146,51 +147,51 @@ const [address, setAddress] = useState('');
       ),
       type: type, // ou "devis" selon le contexte
       status: status, // ou autre selon la logique métier
-    };
-    console.log(invoiceData);
+    }
+    console.log(invoiceData)
 
     try {
       const response = await fetch(`${apiUrl}/api/invoice`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(invoiceData),
-      });
+      })
 
       if (response.ok) {
-        console.log("Facture enregistrée avec succès");
+        console.log('Facture enregistrée avec succès')
         // Autres traitements...
-        setToastMessage("Facture enregistrée avec succès");
-        setIsSuccess(true);
-        resetForm();
+        setToastMessage('Facture enregistrée avec succès')
+        setIsSuccess(true)
+        resetForm()
       } else {
-        console.error("Échec de l'enregistrement de la facture");
-        setToastMessage("Échec de l'enregistrement de la facture");
-        setIsSuccess(false);
+        console.error("Échec de l'enregistrement de la facture")
+        setToastMessage("Échec de l'enregistrement de la facture")
+        setIsSuccess(false)
       }
     } catch (error) {
-      console.error("Erreur lors de l'envoi de la facture:", error);
-      setToastMessage("Erreur lors de l'envoi de la facture");
-      setIsSuccess(false);
+      console.error("Erreur lors de l'envoi de la facture:", error)
+      setToastMessage("Erreur lors de l'envoi de la facture")
+      setIsSuccess(false)
     }
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000); // Cache le toast après 3 secondes
-  };
+    setShowToast(true)
+    setTimeout(() => setShowToast(false), 3000) // Cache le toast après 3 secondes
+  }
   const resetForm = () => {
-    setSelectedClientId("");
-    setArticles([]);
-    setType("facture");
-    setStatus("Attente");
-  };
+    setSelectedClientId('')
+    setArticles([])
+    setType('facture')
+    setStatus('Attente')
+  }
 
   return (
     <>
       {showToast && (
         <div className="toast toast-center toast-middle">
           <div
-            className={`alert ${isSuccess ? "alert-success" : "alert-error"}`}
+            className={`alert ${isSuccess ? 'alert-success' : 'alert-error'}`}
           >
             <span className="text-white">{toastMessage}</span>
           </div>
@@ -264,7 +265,7 @@ const [address, setAddress] = useState('');
                           name="fullName"
                           id="fullName"
                           placeholder={fullName}
-                          disabled={selectedClientId !== ""}
+                          disabled={selectedClientId !== ''}
                         />
                       </div>
                     </div>
@@ -282,7 +283,7 @@ const [address, setAddress] = useState('');
                         name="phoneNumber"
                         id="phoneNumber"
                         placeholder={phoneNumber}
-                        disabled={selectedClientId !== ""}
+                        disabled={selectedClientId !== ''}
                       />
                     </div>
                   </div>
@@ -326,7 +327,7 @@ const [address, setAddress] = useState('');
                         name="emailAddress"
                         id="emailAddress"
                         placeholder={emailAddress}
-                        disabled={selectedClientId !== ""}
+                        disabled={selectedClientId !== ''}
                       />
                     </div>
                   </div>
@@ -340,10 +341,9 @@ const [address, setAddress] = useState('');
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
                       type="text"
                       name="address"
-                      
                       id="address"
                       placeholder={address}
-                      disabled={selectedClientId !== ""}
+                      disabled={selectedClientId !== ''}
                     />
                   </div>
 
@@ -436,18 +436,15 @@ const [address, setAddress] = useState('');
                            
                             onChange={(e) => handleChangeArticle(e, index)}
                           /> */}
-                          <button
-      type="button"
-      className="btn btn-error btn-xs"
-      onClick={() => supprimerArticle(index)} // 'index' est bien défini ici
-    >
-      Supprimer cet article
-    </button>
+                        <button
+                          type="button"
+                          className="btn btn-error btn-xs"
+                          onClick={() => supprimerArticle(index)} // 'index' est bien défini ici
+                        >
+                          Supprimer cet article
+                        </button>
                       </div>
-                      
                     ))}
-
-                    
 
                     <button
                       className="flex justify-center rounded  btn btn-primary py-2 px-6 font-medium  hover:bg-opacity-70"
@@ -487,13 +484,15 @@ const [address, setAddress] = useState('');
                 <AddClientForm />
               </div>
             </div>
-            
+
             <div className="rounded-sm mt-2 border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                <h3 className="font-medium base-content">Nouveaux Factures par excel</h3>
+                <h3 className="font-medium base-content">
+                  Nouveaux Factures par excel
+                </h3>
               </div>
               <div className="mx-11 mt-6">
-              <UploadExcelButton />
+                <UploadExcelButton />
               </div>
             </div>
           </div>
@@ -502,7 +501,7 @@ const [address, setAddress] = useState('');
         {/*  */}
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Formulaire;
+export default Formulaire

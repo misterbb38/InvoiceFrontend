@@ -10,6 +10,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
+    'prettier',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parserOptions: {
@@ -21,14 +22,24 @@ module.exports = {
       version: '18.2', // Assurez-vous que cette version correspond à la version de React utilisée dans votre projet
     },
   },
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'prettier'],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true },
     ],
+    'prettier/prettier': 'error',
     // Ajoutez ici d'autres règles spécifiques au projet au besoin
-    "react/no-unescaped-entities": ["error", {"forbid": ["<", ">", "{", "}"]}],
-    "react-hooks/exhaustive-deps": "off" // Ou "off" pour désactiver
+    'react/no-unescaped-entities': ['error', { forbid: ['<', '>', '{', '}'] }],
+    'react-hooks/exhaustive-deps': 'off', // Ou "off" pour désactiver
+    'linebreak-style': 0,
+    // Règles personnalisées
+    indent: ['error', 2], // Utiliser 2 espaces pour l'indentation
+    semi: ['error', 'never'], // Ne pas utiliser de points-virgules
+    quotes: [
+      'error',
+      'single',
+      { avoidEscape: true, allowTemplateLiterals: true },
+    ], // Utiliser des guillemets simples pour les chaînes de caractères
   },
 }

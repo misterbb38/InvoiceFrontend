@@ -1,179 +1,172 @@
-import { useState, useEffect } from "react";
-import NavigationBreadcrumb from "../components/NavigationBreadcrumb";
-import userThree from "../images/user/user-03.png";
-
+import { useState, useEffect } from 'react'
+import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
+import userThree from '../images/user/user-03.png'
 
 const Parametre = () => {
   const [user, setUser] = useState({
-    nom: "",
-    prenom: "",
-    email: "",
-    telephone: "",
-    devise: "",
-    logo: "",
-    site: "",
-    couleur: "",
-    nomEntreprise: "",
-  });
-  const [logo, setLogo] = useState(null); // Pour gérer le fichier image sélectionné
-  const [isModified, setIsModified] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [isSuccess, setIsSuccess] = useState(true);
-  
+    nom: '',
+    prenom: '',
+    email: '',
+    telephone: '',
+    devise: '',
+    logo: '',
+    site: '',
+    couleur: '',
+    nomEntreprise: '',
+  })
+  const [logo, setLogo] = useState(null) // Pour gérer le fichier image sélectionné
+  const [isModified, setIsModified] = useState(false)
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+  const [isSuccess, setIsSuccess] = useState(true)
 
-  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
-
-  
-  
+  const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-      const token = userInfo?.token;
+      const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
+      const userInfo = JSON.parse(localStorage.getItem('userInfo'))
+      const token = userInfo?.token
 
       try {
         const response = await fetch(`${apiUrl}/api/user/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
+            Authorization: `Bearer ${token}`,
+          },
+        })
 
         if (!response.ok) {
-          throw new Error('Failed to fetch user profile');
+          throw new Error('Failed to fetch user profile')
         }
 
-        const data = await response.json();
-        console.log(data);
+        const data = await response.json()
+        console.log(data)
         setUser({
-      nom: data.nom || "",
-      prenom: data.prenom || "",
-      adresse: data.adresse || "",
-      email: data.email || "",
-      telephone: data.telephone || "",
-      devise: data.devise || "",
-      logo: data.logo || "", // Initialiser avec le chemin de l'image stockée
-      site: data.site || "",
-      nomEntreprise: data.nomEntreprise || "",
-      couleur: data.couleur || ""
-    });
-        
-        
+          nom: data.nom || '',
+          prenom: data.prenom || '',
+          adresse: data.adresse || '',
+          email: data.email || '',
+          telephone: data.telephone || '',
+          devise: data.devise || '',
+          logo: data.logo || '', // Initialiser avec le chemin de l'image stockée
+          site: data.site || '',
+          nomEntreprise: data.nomEntreprise || '',
+          couleur: data.couleur || '',
+        })
       } catch (error) {
-        console.error('Erreur lors de la récupération du profil:', error);
+        console.error('Erreur lors de la récupération du profil:', error)
       }
-    };
+    }
 
-    fetchUserProfile();
-  }, []);
-    
+    fetchUserProfile()
+  }, [])
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({ ...prevUser, [name]: value }));
-    setIsModified(true);
-  };
+    const { name, value } = e.target
+    setUser((prevUser) => ({ ...prevUser, [name]: value }))
+    setIsModified(true)
+  }
 
   const handleImageChange = (e) => {
-    setLogo(e.target.files[0]); // Stocker le fichier sélectionné
-    setIsModified(true);
-  };
+    setLogo(e.target.files[0]) // Stocker le fichier sélectionné
+    setIsModified(true)
+  }
 
   const handleSubmitLogo = async (e) => {
-    e.preventDefault();
-    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
-    const token = userInfo?.token;
-    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+    e.preventDefault()
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
+    const token = userInfo?.token
+    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
-    const formData = new FormData();
-    formData.append("logo", logo);
+    const formData = new FormData()
+    formData.append('logo', logo)
 
     try {
-      const response = await fetch(`${apiUrl}/api/user/profile/`, { // Assurez-vous que ce chemin est correct et configuré dans le backend pour gérer l'upload de l'image
-        method: "PUT",
+      const response = await fetch(`${apiUrl}/api/user/profile/`, {
+        // Assurez-vous que ce chemin est correct et configuré dans le backend pour gérer l'upload de l'image
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
         },
         body: formData,
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to update logo.");
+        throw new Error('Failed to update logo.')
       }
 
-      const data = await response.json();
-      setUser((prevUser) => ({ ...prevUser, logo: data.logo })); // Mettre à jour l'URL de l'image dans l'état local
-      localStorage.setItem("userInfo", JSON.stringify({ ...userInfo, logo: data.logo })); // Mettre à jour le localStorage
-      setIsSuccess(true);
-      setToastMessage("Logo mis à jour avec succès !!");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      const data = await response.json()
+      setUser((prevUser) => ({ ...prevUser, logo: data.logo })) // Mettre à jour l'URL de l'image dans l'état local
+      localStorage.setItem(
+        'userInfo',
+        JSON.stringify({ ...userInfo, logo: data.logo })
+      ) // Mettre à jour le localStorage
+      setIsSuccess(true)
+      setToastMessage('Logo mis à jour avec succès !!')
+      setShowToast(true)
+      setTimeout(() => setShowToast(false), 3000)
       console.log(data)
     } catch (error) {
-      console.error("Erreur lors de la mise à jour du logo :", error);
-      setIsSuccess(false);
-      setToastMessage("Erreur lors de la mise à jour du logo.");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      console.error('Erreur lors de la mise à jour du logo :', error)
+      setIsSuccess(false)
+      setToastMessage('Erreur lors de la mise à jour du logo.')
+      setShowToast(true)
+      setTimeout(() => setShowToast(false), 3000)
     }
-  };
-
-  
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const userInfo = JSON.parse(localStorage.getItem("userInfo")) || {};
-    const token = userInfo?.token;
-    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL;
+    e.preventDefault()
+    const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
+    const token = userInfo?.token
+    const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
     try {
       const response = await fetch(`${apiUrl}/api/user/profile`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to update profile.");
+        throw new Error('Failed to update profile.')
       }
 
-      const updatedUser = await response.json();
-      localStorage.setItem("userInfo", JSON.stringify(updatedUser));
-      setIsModified(false);
-      setIsSuccess(true);
-      setToastMessage("Profil mis à jour avec succès !!");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      const updatedUser = await response.json()
+      localStorage.setItem('userInfo', JSON.stringify(updatedUser))
+      setIsModified(false)
+      setIsSuccess(true)
+      setToastMessage('Profil mis à jour avec succès !!')
+      setShowToast(true)
+      setTimeout(() => setShowToast(false), 3000)
     } catch (error) {
-      console.error("Erreur lors de la mise à jour du profil :", error);
-      setIsSuccess(false);
-      setToastMessage("Erreur lors de la mise à jour du profil .");
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
+      console.error('Erreur lors de la mise à jour du profil :', error)
+      setIsSuccess(false)
+      setToastMessage('Erreur lors de la mise à jour du profil .')
+      setShowToast(true)
+      setTimeout(() => setShowToast(false), 3000)
     }
-  };
+  }
 
   return (
     <>
       <div className="bg-base-100 min-h-[800px]">
         <NavigationBreadcrumb pageName="Settings" />
-        
+
         <div className="bg-base-100 base-content grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
-            
             <div className="rounded-sm border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium base-content">
                   Personal Information
                 </h3>
               </div>
-              
+
               <div className="p-7">
                 <form onSubmit={handleSubmit}>
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
@@ -272,28 +265,27 @@ const Parametre = () => {
                     </label>
                   </div>
                   <div className="mb-5.5">
-  <select
-    className="select select-bordered w-full max-w-xs"
-    name="couleur"
-    value={user.couleur}
-    onChange={handleChange}
-  >
-    <option disabled>Choisissez une couleur principale</option>
-    <option value="rouge">Rouge</option>
-    <option value="vert">Vert</option>
-    <option value="bleu">Bleu</option>
-    <option value="jaune">Jaune</option>
-    <option value="orange">Orange</option>
-    <option value="violet">Violet</option>
-    <option value="rose">Rose</option>
-    <option value="marron">Marron</option>
-    <option value="gris">Gris</option>
-    <option value="noir">Noir</option>
-    
-    
-  </select>
-</div>
-
+                    <select
+                      className="select select-bordered w-full max-w-xs"
+                      name="couleur"
+                      value={user.couleur}
+                      onChange={handleChange}
+                    >
+                      <option disabled>
+                        Choisissez une couleur principale
+                      </option>
+                      <option value="rouge">Rouge</option>
+                      <option value="vert">Vert</option>
+                      <option value="bleu">Bleu</option>
+                      <option value="jaune">Jaune</option>
+                      <option value="orange">Orange</option>
+                      <option value="violet">Violet</option>
+                      <option value="rose">Rose</option>
+                      <option value="marron">Marron</option>
+                      <option value="gris">Gris</option>
+                      <option value="noir">Noir</option>
+                    </select>
+                  </div>
 
                   <div className="mb-5.5">
                     <select
@@ -318,7 +310,7 @@ const Parametre = () => {
                     <button
                       type="submit"
                       className={`flex justify-center rounded ${
-                        isModified ? "bg-primary" : "bg-gray-500"
+                        isModified ? 'bg-primary' : 'bg-gray-500'
                       } py-2 px-6 font-medium text-gray hover:bg-opacity-70`}
                       disabled={!isModified}
                     >
@@ -330,7 +322,7 @@ const Parametre = () => {
                   <div className="toast toast-center toast-middle">
                     <div
                       className={`alert ${
-                        isSuccess ? "alert-success" : "alert-error"
+                        isSuccess ? 'alert-success' : 'alert-error'
                       }`}
                     >
                       <span className="text-white">{toastMessage}</span>
@@ -346,16 +338,21 @@ const Parametre = () => {
                 <h3 className="font-medium base-content">Your Photo</h3>
               </div>
               <div className="p-7">
-                <form   onSubmit={handleSubmitLogo} action="#">
+                <form onSubmit={handleSubmitLogo} action="#">
                   <div className="mb-4 flex items-center gap-3">
                     <div className="h-14 w-14 rounded-full">
-                    <img src={`${apiUrl}/${user.logo.replace(/\\/g, '/')}` || userThree} alt="User" />
+                      <img
+                        src={
+                          `${apiUrl}/${user.logo.replace(/\\/g, '/')}` ||
+                          userThree
+                        }
+                        alt="User"
+                      />
                     </div>
                     <div>
                       <span className="mb-1.5 base-content">
                         Editer votre logo
                       </span>
-                      
                     </div>
                   </div>
 
@@ -417,7 +414,6 @@ const Parametre = () => {
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                       type="submit"
-                      
                     >
                       Enregistrer
                     </button>
@@ -427,10 +423,9 @@ const Parametre = () => {
             </div>
           </div>
         </div>
-        
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Parametre;
+export default Parametre

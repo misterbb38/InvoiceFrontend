@@ -1,22 +1,21 @@
-import { motion } from "framer-motion";
-import Logo from '../../images/logo/logo.png';
-import { Link } from 'react-router-dom'; // Importez le composant Link
-
+import { motion } from 'framer-motion'
+import Logo from '../../images/logo/logo.png'
+import { Link } from 'react-router-dom' // Importez le composant Link
 
 const headerVariants = {
   hidden: { y: -100, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: "easeOut" } },
-};
+  visible: { y: 0, opacity: 1, transition: { duration: 0.8, ease: 'easeOut' } },
+}
 
 const linkVariants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { delay: 0.2, duration: 0.5 } },
-};
+}
 
 const buttonVariants = {
   hidden: { scale: 0 },
   visible: { scale: 1, transition: { delay: 0.4, duration: 0.5 } },
-};
+}
 
 const HeaderHome = () => {
   return (
@@ -32,27 +31,42 @@ const HeaderHome = () => {
           className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
           variants={linkVariants}
         >
-          <img className="hidden dark:block" src={Logo} alt="Logo" /> 
-          
+          <img className="hidden dark:block" src={Logo} alt="Logo" />
+
           {/* <span className="text-blue-700 text-xl font-bold">Factu</span><span className="text-orange-500 text-xl font-bold">Flex</span> */}
         </motion.a>
         <motion.nav
           className="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 flex flex-wrap items-center text-base justify-center"
           variants={linkVariants}
         >
-          <a href="#hero-home" className="mr-5 text-base-content hover:text-gray-900">
+          <a
+            href="#hero-home"
+            className="mr-5 text-base-content hover:text-gray-900"
+          >
             Acceuil
           </a>
-          <a href="#feature-home" className="mr-5 text-base-content hover:text-gray-900">
+          <a
+            href="#feature-home"
+            className="mr-5 text-base-content hover:text-gray-900"
+          >
             Aventages
           </a>
-          <a href="#step-home" className="mr-5 text-base-content hover:text-gray-900">
+          <a
+            href="#step-home"
+            className="mr-5 text-base-content hover:text-gray-900"
+          >
             a propos
           </a>
-          <a href="#price-home" className="mr-5 text-base-content hover:text-gray-900">
+          <a
+            href="#price-home"
+            className="mr-5 text-base-content hover:text-gray-900"
+          >
             Prix
           </a>
-          <a href="#contact-form" className="mr-5 text-base-content hover:text-gray-900">
+          <a
+            href="#contact-form"
+            className="mr-5 text-base-content hover:text-gray-900"
+          >
             Contact
           </a>
         </motion.nav>
@@ -93,47 +107,47 @@ const HeaderHome = () => {
           </svg>
         </label>
         <Link to="/signup" style={{ textDecoration: 'none' }}>
-        <motion.button
-          className="inline-flex items-center btn btn-primary  px-3 rounded text-base mt-4 md:mt-0"
-          variants={buttonVariants}
-        >
-          Inscription
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="w-4 h-4 ml-1"
-            viewBox="0 0 24 24"
+          <motion.button
+            className="inline-flex items-center btn btn-primary  px-3 rounded text-base mt-4 md:mt-0"
+            variants={buttonVariants}
           >
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </motion.button>
+            Inscription
+            <svg
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="w-4 h-4 ml-1"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </motion.button>
         </Link>
 
         <Link to="/signin" style={{ textDecoration: 'none' }}>
-        <motion.button
-          className="inline-flex items-center btn btn-primary mx-2 px-3 rounded text-base mt-4 md:mt-0"
-          variants={buttonVariants}
-        >
-          Connexion
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="w-4 h-4 ml-1"
-            viewBox="0 0 24 24"
+          <motion.button
+            className="inline-flex items-center btn btn-primary mx-2 px-3 rounded text-base mt-4 md:mt-0"
+            variants={buttonVariants}
           >
-            <path d="M5 12h14M12 5l7 7-7 7"></path>
-          </svg>
-        </motion.button>
+            Connexion
+            <svg
+              fill="none"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              className="w-4 h-4 ml-1"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+            </svg>
+          </motion.button>
         </Link>
       </div>
     </motion.header>
-  );
-};
+  )
+}
 
-export default HeaderHome;
+export default HeaderHome
