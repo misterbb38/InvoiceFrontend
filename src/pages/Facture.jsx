@@ -5,6 +5,7 @@ import FilterFactures from '../components/FactureFilter'
 import DeleteFactureButton from '../components/DeleteFactureButton'
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
 import CurrencySelector from '../components/CurrencySelector' // Importez le nouveau composant
+import Chatbot from '../components/Chatbot'
 
 function Facture() {
   const [allFactures, setAllFactures] = useState([])
@@ -34,25 +35,6 @@ function Facture() {
     fetchFactures()
   }, [])
 
-  // const fetchFactures = async () => {
-  //   try {
-  //     const response = await fetch(`${apiUrl}/api/invoice`);
-  //     const data = await response.json();
-  //     if (data.success) {
-  //       const facturesFiltrees = data.data
-  //         .filter(facture => facture.type === "facture")
-  //         .sort((a, b) => new Date(b.date) - new Date(a.date)); // Tri par date décroissante
-  //         console.log(data.data)
-
-  //       setAllFactures(facturesFiltrees);
-  //       setDisplayedFactures(facturesFiltrees);
-  //     }
-  //     setLoading(false);
-  //   } catch (error) {
-  //     console.error("Erreur:", error);
-  //     setLoading(false);
-  //   }
-  // };
   const fetchFactures = async () => {
     try {
       // Récupérer le token de l'utilisateur stocké localement
@@ -152,6 +134,7 @@ function Facture() {
 
   return (
     <div className="base-content bg-base-100 mx-auto p-4 min-h-[800px]">
+      <Chatbot />
       <NavigationBreadcrumb pageName="Facture" />
       <div className="divider"></div>
       {/* <h2 className="text-2xl font-bold mb-4">Factures</h2> */}

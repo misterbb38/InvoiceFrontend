@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
 import AddClientForm from '../components/AddClientForm'
 import UploadExcelButton from '../components/UploadExcelButton'
+import Chatbot from '../components/Chatbot'
 
 const Formulaire = () => {
   const [selectedClientId, setSelectedClientId] = useState('')
@@ -199,7 +200,7 @@ const Formulaire = () => {
       )}
       <div className="bg-base-100 ">
         <NavigationBreadcrumb pageName="Settings" />
-
+        <Chatbot />
         {/* ... (Reste du code tel quel) ... */}
         <div className="bg-base-100 base-content grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">

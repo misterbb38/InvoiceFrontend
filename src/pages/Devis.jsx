@@ -5,6 +5,7 @@ import FilterFactures from '../components/FactureFilter'
 import DeleteFactureButton from '../components/DeleteFactureButton'
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
 import CurrencySelector from '../components/CurrencySelector' // Importez le nouveau composant
+import Chatbot from '../components/Chatbot'
 
 function Facture() {
   const [allFactures, setAllFactures] = useState([])
@@ -152,6 +153,7 @@ function Facture() {
 
   return (
     <div className="base-content bg-base-100 mx-auto p-4 min-h-[800px]">
+      <Chatbot />
       <NavigationBreadcrumb pageName="Facture" />
       <div className="divider"></div>
       {/* <h2 className="text-2xl font-bold mb-4">Factures</h2> */}

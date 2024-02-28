@@ -1,9 +1,11 @@
+import Chatbot from '../components/Chatbot'
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
 
 const Instruction = () => {
   return (
     <>
       <div className="bg-base-100">
+        <Chatbot />
         <NavigationBreadcrumb pageName="Instructions" />
         <div className="p-5">
           <h2 className="text-lg font-bold mb-4">

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
 import userThree from '../images/user/user-03.png'
+import Chatbot from '../components/Chatbot'
 
 const Parametre = () => {
   const [user, setUser] = useState({
@@ -157,7 +158,7 @@ const Parametre = () => {
     <>
       <div className="bg-base-100 min-h-[800px]">
         <NavigationBreadcrumb pageName="Settings" />
-
+        <Chatbot />
         <div className="bg-base-100 base-content grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">

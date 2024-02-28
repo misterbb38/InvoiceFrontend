@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import EditClientButton from '../components/EditClientButton' // Ajustez le chemin d'importation selon votre structure de fichiers
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
+import Chatbot from '../components/Chatbot'
 
 function ClientList() {
   const [clients, setClients] = useState([])
@@ -65,6 +66,7 @@ function ClientList() {
 
   return (
     <div className="base-content bg-base-100 mx-auto p-4 min-h-[800px]">
+      <Chatbot />
       <NavigationBreadcrumb pageName="Client" />
       <div className="divider"></div>
       {loading ? (
