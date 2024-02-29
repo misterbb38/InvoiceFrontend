@@ -32,7 +32,7 @@ module.exports = {
     // Ajoutez ici d'autres règles spécifiques au projet au besoin
     'react/no-unescaped-entities': ['error', { forbid: ['<', '>', '{', '}'] }],
     'react-hooks/exhaustive-deps': 'off', // Ou "off" pour désactiver
-    'linebreak-style': 0,
+    'linebreak-style': 'off',
     // Règles personnalisées
     indent: ['error', 2], // Utiliser 2 espaces pour l'indentation
     semi: ['error', 'never'], // Ne pas utiliser de points-virgules

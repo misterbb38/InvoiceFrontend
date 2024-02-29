@@ -81,7 +81,7 @@ function Sidebar() {
             onClick={() => handleMenuItemClick(menuItem.id)}
           >
             <FontAwesomeIcon icon={menuItem.icon} className="text-lg" />
-            <span className="text-xs">{menuItem.label}</span>
+            <span className="text-xs"></span>
           </Link>
         ))}
       </div>

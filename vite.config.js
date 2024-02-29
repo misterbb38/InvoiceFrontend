@@ -13,6 +13,8 @@ export default defineConfig({
     //   }
     // }
   },
+  // Ajoutez d'autres configurations ici
+  assetsInclude: ['**/*.xlsx'],
   resolve: {
     // Ajoutez ici les extensions que vous souhaitez prendre en charge
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
