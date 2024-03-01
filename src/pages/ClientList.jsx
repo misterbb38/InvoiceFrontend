@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import EditClientButton from '../components/EditClientButton' // Ajustez le chemin d'importation selon votre structure de fichiers
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
 import Chatbot from '../components/Chatbot'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 function ClientList() {
   const [clients, setClients] = useState([])
@@ -104,7 +106,7 @@ function ClientList() {
                         className="btn btn-error"
                         onClick={() => deleteClient(client._id)}
                       >
-                        Supprimer
+                        <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </div>
                   </td>

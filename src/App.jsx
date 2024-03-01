@@ -16,6 +16,8 @@ import ClientList from './pages/ClientList'
 import Home from './pages/home'
 import GenerateAccessKey from './components/GenerateAccessKey'
 import KeyExpired from './components/KeyExpired'
+import SuperAdminRoute from './components/SuperAdminRoute' // Assurez-vous que le chemin est correct
+
 import Notifications from './components/Notifications'
 
 function AppLayout() {
@@ -46,9 +48,17 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
 
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/keyExpired" element={<KeyExpired />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/keyGen" element={<GenerateAccessKey />} />
-          <Route path="/key" element={<KeyExpired />} />
+          <Route
+            path="/keyGen"
+            element={
+              <SuperAdminRoute>
+                <GenerateAccessKey />
+              </SuperAdminRoute>
+            }
+          />
+
           <Route path="/dash" element={<AppLayout />}>
             <Route index element={<HomeContent />} />
             <Route path="Facture" element={<Facture />} />

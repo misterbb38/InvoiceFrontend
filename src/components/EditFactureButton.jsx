@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEdit } from '@fortawesome/free-solid-svg-icons'
 
 function EditFactureButton({ factureId, onFactureUpdated }) {
   const [showModal, setShowModal] = useState(false)
@@ -174,8 +176,8 @@ function EditFactureButton({ factureId, onFactureUpdated }) {
 
   return (
     <>
-      <button className="btn btn-secondary " onClick={() => setShowModal(true)}>
-        Éditer
+      <button className="btn btn-secondary" onClick={() => setShowModal(true)}>
+        <FontAwesomeIcon icon={faEdit} />
       </button>
       {showModal && (
         <div className="modal modal-open">

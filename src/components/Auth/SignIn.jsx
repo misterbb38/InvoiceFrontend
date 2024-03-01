@@ -43,14 +43,14 @@ const SignIn = () => {
         if (currentDate <= expirationDate) {
           if (daysUntilExpiration <= 7) {
             // Si l'abonnement expire dans 7 jours ou moins, rediriger vers /key
-            navigate('/key')
+            navigate('/keyExpired')
           } else {
             // Sinon, continuer vers /dash
             navigate('/dash')
           }
         } else {
           // Si la date d'expiration est passée, rediriger vers /key
-          navigate('/key')
+          navigate('/keyExpired')
         }
       } else {
         // Pour les autres types d'utilisateurs, rediriger vers /KeyGen

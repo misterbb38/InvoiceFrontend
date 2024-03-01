@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import jsPDF from 'jspdf'
 import PropTypes from 'prop-types'
 import logoLeft from '../images/logo/logo.png'
@@ -288,9 +290,10 @@ function GeneratePDFButton({ invoice, currency }) {
   }
 
   return (
-    <button className="btn btn-primary " onClick={generatePDF}>
-      Générer PDF
+    <button className="btn btn-primary" onClick={generatePDF}>
+      <FontAwesomeIcon icon={faFilePdf} />
     </button>
+
   )
 }
 

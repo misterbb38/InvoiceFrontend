@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 function DeleteFactureButton({ factureId, onFactureDeleted }) {
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
@@ -27,8 +29,8 @@ function DeleteFactureButton({ factureId, onFactureDeleted }) {
   }
 
   return (
-    <button className="btn btn-error " onClick={handleDelete}>
-      Supprimer
+    <button className="btn btn-error" onClick={handleDelete}>
+      <FontAwesomeIcon icon={faTrash} />
     </button>
   )
 }
