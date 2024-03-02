@@ -13,6 +13,7 @@ import Formulaire from './pages/Formulaire'
 import Instruction from './pages/Instruction'
 import Parametre from './pages/Parametre'
 import ClientList from './pages/ClientList'
+import ProduitList from './pages/ProduitList'
 import Home from './pages/home'
 import GenerateAccessKey from './components/GenerateAccessKey'
 import KeyExpired from './components/KeyExpired'
@@ -64,7 +65,7 @@ function App() {
             <Route path="Facture" element={<Facture />} />
             <Route path="Devis" element={<Devis />} />
             <Route path="client" element={<ClientList />} />
-
+            <Route path="article" element={<ProduitList />} />
             <Route path="Formulaire" element={<Formulaire />} />
             <Route path="instruction" element={<Instruction />} />
             <Route path="notification" element={<Notifications />} />

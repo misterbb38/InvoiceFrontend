@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react'
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
 import AddClientForm from '../components/AddClientForm'
+import AddProduitForm from '../components/AddProduitForm'
 import UploadExcelButton from '../components/UploadExcelButton'
+import UploadExcelButtonProduit from '../components/UploadExcelButtonProduit'
 import Chatbot from '../components/Chatbot'
 
 const Formulaire = () => {
   const [selectedClientId, setSelectedClientId] = useState('')
   const [clients, setClients] = useState([])
+  const [produits, setProduits] = useState([])
   const [articles, setArticles] = useState([])
   const [type, setType] = useState('facture') // 'facture' par défaut
   const [status, setStatus] = useState('Attente') // 'pending' par défaut
@@ -50,6 +53,45 @@ const Formulaire = () => {
   }, [])
 
   useEffect(() => {
+    const fetchProduits = async () => {
+      const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
+      const token = userInfo?.token
+      try {
+        const response = await fetch(`${apiUrl}/api/produit`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        const data = await response.json()
+        if (data.success) {
+          setProduits(data.data)
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des produits :', error)
+      }
+    }
+
+    fetchProduits()
+  }, [])
+
+  const handleSelectProduit = (index, e) => {
+    const newArticles = articles.map((article, i) => {
+      if (i === index) {
+        const selectedProduit = produits.find((p) => p._id === e.target.value)
+        return {
+          ...article,
+          selectedProduitId: e.target.value,
+          ref: selectedProduit ? selectedProduit.reference : '',
+          description: selectedProduit ? selectedProduit.designation : '',
+          prixUnitaire: selectedProduit ? selectedProduit.prixUnitaire : '',
+        }
+      }
+      return article
+    })
+    setArticles(newArticles)
+  }
+
+  useEffect(() => {
     const selectedClient = clients.find(
       (client) => client._id === selectedClientId
     )
@@ -75,7 +117,14 @@ const Formulaire = () => {
   const ajouterArticle = () => {
     setArticles([
       ...articles,
-      { ref: '', description: '', quantite: '', prixUnitaire: '', total: '' },
+      {
+        ref: '',
+        description: '',
+        quantite: '',
+        prixUnitaire: '',
+        total: '',
+        selectedProduitId: '',
+      },
     ])
   }
 
@@ -388,6 +437,18 @@ const Formulaire = () => {
 
                     {articles.map((article, index) => (
                       <div key={index} className="mb-5.5">
+                        <select
+                          className="mb-3 w-full  rounded border border-stroke bg-gray py-3 px-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300 dark:focus:border-primary"
+                          value={article.selectedProduitId}
+                          onChange={(e) => handleSelectProduit(index, e)}
+                        >
+                          <option value="">-- Choisissez un article --</option>
+                          {produits.map((produit) => (
+                            <option key={produit._id} value={produit._id}>
+                              {produit.designation}
+                            </option>
+                          ))}
+                        </select>
                         {/* Ligne pour Référence et Description */}
                         <div className="flex flex-col gap-5.5 sm:flex-row">
                           <input
@@ -475,6 +536,17 @@ const Formulaire = () => {
                 </form>
               </div>
             </div>
+
+            <div className="rounded-sm mt-2 mb-2 border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
+              <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+                <h3 className="font-medium base-content">
+                  Nouveaux articles par excel
+                </h3>
+              </div>
+              <div className="mx-11 mt-6">
+                <UploadExcelButtonProduit />
+              </div>
+            </div>
           </div>
           <div className="col-span-5 xl:col-span-2">
             <div className="rounded-sm border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -486,10 +558,19 @@ const Formulaire = () => {
               </div>
             </div>
 
-            <div className="rounded-sm mt-2 border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="rounded-sm border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
+              <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+                <h3 className="font-medium base-content">Nouveau article</h3>
+              </div>
+              <div className="mx-11 mt-6">
+                <AddProduitForm />
+              </div>
+            </div>
+
+            <div className="rounded-sm mt-2 mb-2 border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                 <h3 className="font-medium base-content">
-                  Nouveaux Factures par excel
+                  Nouveaux factures par excel
                 </h3>
               </div>
               <div className="mx-11 mt-6">

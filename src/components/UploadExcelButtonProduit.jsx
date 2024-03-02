@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react' // Ajouter useRef
 
-function UploadExcelButton() {
+function UploadExcelButtonProduit() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
@@ -37,7 +37,7 @@ function UploadExcelButton() {
     const token = userInfo?.token // Récupérer le token depuis le stockage local
 
     try {
-      const response = await fetch(`${apiUrl}/api/invoice/upload`, {
+      const response = await fetch(`${apiUrl}/api/produit/upload`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
@@ -97,4 +97,4 @@ function UploadExcelButton() {
   )
 }
 
-export default UploadExcelButton
+export default UploadExcelButtonProduit
