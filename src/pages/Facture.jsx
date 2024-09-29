@@ -4,7 +4,7 @@ import GeneratePDFButton from '../components/GeneratePDFButton'
 import FilterFactures from '../components/FactureFilter'
 import DeleteFactureButton from '../components/DeleteFactureButton'
 import NavigationBreadcrumb from '../components/NavigationBreadcrumb'
-import CurrencySelector from '../components/CurrencySelector' // Importez le nouveau composant
+// import CurrencySelector from '../components/CurrencySelector' // Importez le nouveau composant
 import Chatbot from '../components/Chatbot'
 
 function Facture() {
@@ -137,19 +137,19 @@ function Facture() {
       <Chatbot />
       <NavigationBreadcrumb pageName="Facture" />
       <div className="divider"></div>
-      {/* <h2 className="text-2xl font-bold mb-4">Factures</h2> */}
-      <FilterFactures onFilter={handleFilter} />
-      {/* // Ajout dans le rendu JSX de Facture, là où vous souhaitez que le sélecteur apparaisse */}
-      <CurrencySelector currency={currency} setCurrency={setCurrency} />
 
+      <FilterFactures onFilter={handleFilter} />
+      {/* <CurrencySelector currency={currency} setCurrency={setCurrency} /> */}
       <div className="divider"></div>
+
       {loading ? (
         <div className="loading loading-spinner text-primary">
           Chargement...
         </div>
       ) : (
         <>
-          <div className="overflow-x-auto">
+          {/* Affichage en tableau pour les écrans moyens et grands */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="table w-full">
               <thead>
                 <tr>
@@ -158,7 +158,6 @@ function Facture() {
                   </th>
                   <th className="font-bold text-lg text-base-content">Date</th>
                   <th className="font-bold text-lg text-base-content">
-                    {' '}
                     Nº facture
                   </th>
                   <th className="font-bold text-lg text-base-content">Total</th>
@@ -173,17 +172,15 @@ function Facture() {
               <tbody>
                 {currentFactures.map((facture) => (
                   <tr key={facture._id}>
-                    <td>{facture.client.name} </td>
+                    <td>{facture.client.name}</td>
                     <td>{new Date(facture.date).toLocaleDateString()}</td>
                     <td>{facture.invoiceNumber}</td>
                     <td>
-                      {facture.total.toFixed(2)} {currency}
+                      {facture.total.toFixed(2)} {facture.currency}
                     </td>
-                    {/* <td>{facture.status}</td> */}
-
-                    <td className="text-center ">
+                    <td className="text-center">
                       <span
-                        className={`${statusBadgeClasses[facture.status]} text-white  `}
+                        className={`${statusBadgeClasses[facture.status]} text-white`}
                       >
                         {facture.status.charAt(0).toUpperCase() +
                           facture.status.slice(1)}
@@ -191,10 +188,7 @@ function Facture() {
                     </td>
                     <td>
                       <div className="flex justify-around space-x-1">
-                        <GeneratePDFButton
-                          invoice={facture}
-                          currency={currency}
-                        />
+                        <GeneratePDFButton invoice={facture} />
                         <EditFactureButton
                           factureId={facture._id}
                           onFactureUpdated={refreshFactures}
@@ -210,6 +204,50 @@ function Facture() {
               </tbody>
             </table>
           </div>
+
+          {/* Affichage en cartes pour les petits écrans */}
+          <div className="sm:hidden grid grid-cols-1 gap-4">
+            {currentFactures.map((facture) => (
+              <div key={facture._id} className="card bg-base-100 shadow-md p-4">
+                <h3 className="font-bold text-lg mb-2">
+                  Facture Nº {facture.invoiceNumber}
+                </h3>
+                <p>
+                  <span className="font-semibold">Client:</span>{' '}
+                  {facture.client.name}
+                </p>
+                <p>
+                  <span className="font-semibold">Date:</span>{' '}
+                  {new Date(facture.date).toLocaleDateString()}
+                </p>
+                <p>
+                  <span className="font-semibold">Total:</span>{' '}
+                  {facture.total.toFixed(2)} {currency}
+                </p>
+                <p className="mt-2">
+                  <span
+                    className={`${statusBadgeClasses[facture.status]} text-white`}
+                  >
+                    {facture.status.charAt(0).toUpperCase() +
+                      facture.status.slice(1)}
+                  </span>
+                </p>
+                <div className="flex justify-between mt-4">
+                  <GeneratePDFButton invoice={facture} currency={currency} />
+                  <EditFactureButton
+                    factureId={facture._id}
+                    onFactureUpdated={refreshFactures}
+                  />
+                  <DeleteFactureButton
+                    factureId={facture._id}
+                    onFactureDeleted={refreshFactures}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Pagination */}
           {totalPageCount > 1 && (
             <nav className="flex justify-center mt-4">
               <ul className="flex list-none">

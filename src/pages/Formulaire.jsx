@@ -5,14 +5,16 @@ import AddProduitForm from '../components/AddProduitForm'
 import UploadExcelButton from '../components/UploadExcelButton'
 import UploadExcelButtonProduit from '../components/UploadExcelButtonProduit'
 import Chatbot from '../components/Chatbot'
+// import UploadDocumentButton from '../components/UploadDocumentButton'
 
 const Formulaire = () => {
   const [selectedClientId, setSelectedClientId] = useState('')
   const [clients, setClients] = useState([])
   const [produits, setProduits] = useState([])
   const [articles, setArticles] = useState([])
-  const [type, setType] = useState('facture') // 'facture' par défaut
-  const [status, setStatus] = useState('Attente') // 'pending' par défaut
+  const [type, setType] = useState('facture')
+  const [status, setStatus] = useState('Attente')
+  const [currency, setCurrency] = useState('CFA') // État pour la devise
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(true)
@@ -24,24 +26,38 @@ const Formulaire = () => {
 
   const apiUrl = import.meta.env.VITE_APP_API_BASE_URL
 
+  const handleDocumentProcessed = ({ fileName, quantity }) => {
+    // Ajouter le document comme un article dans la facture
+    setArticles([
+      ...articles,
+      {
+        ref: '',
+        description: fileName,
+        quantite: quantity,
+        prixUnitaire: '',
+        total: '',
+        selectedProduitId: '',
+        category: '',
+      },
+    ])
+  }
+
   useEffect(() => {
     const fetchClients = async () => {
       const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
-      const token = userInfo?.token // Récupérer le token depuis le stockage local
+      const token = userInfo?.token
       try {
         const response = await fetch(`${apiUrl}/api/client`, {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${token}`, // Ajouter l'en-tête d'autorisation avec le token
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         })
         const data = await response.json()
         if (data && data.success && data.data) {
-          setClients(data.data) // Accès aux clients via la propriété data
-          console.log('Clients chargés:', data.data) // Ajoutez ceci pour le diagnostic
+          setClients(data.data)
         } else {
-          // Gérer le cas où data ou data.data n'existe pas
           console.error('Aucun client trouvé dans la réponse')
         }
       } catch (error) {
@@ -101,7 +117,6 @@ const Formulaire = () => {
       setEmailAddress(selectedClient.email || '')
       setAddress(selectedClient.address || '')
     } else {
-      // Réinitialiser les états si aucun client n'est sélectionné
       setFullName('')
       setPhoneNumber('')
       setEmailAddress('')
@@ -111,7 +126,6 @@ const Formulaire = () => {
 
   const handleClientChange = (e) => {
     setSelectedClientId(e.target.value)
-    console.log('ID de client sélectionné:', e.target.value) // Pour diagnostic
   }
 
   const ajouterArticle = () => {
@@ -124,11 +138,11 @@ const Formulaire = () => {
         prixUnitaire: '',
         total: '',
         selectedProduitId: '',
+        category: 'Traduction', // Définir une catégorie par défaut
       },
     ])
   }
 
-  // Fonction pour supprimer un article
   const supprimerArticle = (indexASupprimer) => {
     setArticles(articles.filter((_, index) => index !== indexASupprimer))
   }
@@ -136,8 +150,13 @@ const Formulaire = () => {
   const handleChangeArticle = (index, e) => {
     const updatedArticles = articles.map((article, i) => {
       if (i === index) {
-        const newArticle = { ...article, [e.target.name]: e.target.value }
-
+        const newArticle = {
+          ...article,
+          [e.target.name.split('-')[0]]: e.target.value,
+        } // Mise à jour de la catégorie
+        if (e.target.name.startsWith('category')) {
+          newArticle.category = e.target.value // Mise à jour spécifique pour la catégorie
+        }
         if (e.target.name === 'quantite' || e.target.name === 'prixUnitaire') {
           const quantite =
             e.target.name === 'quantite'
@@ -149,7 +168,6 @@ const Formulaire = () => {
               : Number(article.prixUnitaire)
           newArticle.total = quantite * prixUnitaire
         }
-
         return newArticle
       }
       return article
@@ -160,12 +178,11 @@ const Formulaire = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     const userInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
-    const token = userInfo?.token // S'assurer d'utiliser le token actuel
+    const token = userInfo?.token
 
     const clientSelectionne = clients.find(
       (client) => client._id === selectedClientId
     )
-    console.log('Client sélectionné:', clientSelectionne) // Pour diagnostic
 
     const invoiceData = {
       Client: clientSelectionne ? clientSelectionne._id : null,
@@ -189,16 +206,17 @@ const Formulaire = () => {
         quantity: Number(article.quantite),
         price: Number(article.prixUnitaire),
         total: Number(article.quantite) * Number(article.prixUnitaire),
+        category: article.category, // Ajout de la catégorie
       })),
       total: articles.reduce(
         (acc, article) =>
           acc + Number(article.quantite) * Number(article.prixUnitaire),
         0
       ),
-      type: type, // ou "devis" selon le contexte
-      status: status, // ou autre selon la logique métier
+      type: type,
+      status: status,
+      currency: currency,
     }
-    console.log(invoiceData)
 
     try {
       const response = await fetch(`${apiUrl}/api/invoice`, {
@@ -211,24 +229,21 @@ const Formulaire = () => {
       })
 
       if (response.ok) {
-        console.log('Facture enregistrée avec succès')
-        // Autres traitements...
         setToastMessage('Facture enregistrée avec succès')
         setIsSuccess(true)
         resetForm()
       } else {
-        console.error("Échec de l'enregistrement de la facture")
         setToastMessage("Échec de l'enregistrement de la facture")
         setIsSuccess(false)
       }
     } catch (error) {
-      console.error("Erreur lors de l'envoi de la facture:", error)
       setToastMessage("Erreur lors de l'envoi de la facture")
       setIsSuccess(false)
     }
     setShowToast(true)
-    setTimeout(() => setShowToast(false), 3000) // Cache le toast après 3 secondes
+    setTimeout(() => setShowToast(false), 3000)
   }
+
   const resetForm = () => {
     setSelectedClientId('')
     setArticles([])
@@ -250,7 +265,6 @@ const Formulaire = () => {
       <div className="bg-base-100 ">
         <NavigationBreadcrumb pageName="Settings" />
         <Chatbot />
-        {/* ... (Reste du code tel quel) ... */}
         <div className="bg-base-100 base-content grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-base-100 shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -382,7 +396,6 @@ const Formulaire = () => {
                     </div>
                   </div>
 
-                  {/* Champ pour l'Adresse */}
                   <div className="mb-5.5">
                     <label className="mb-3 block text-sm font-medium base-content">
                       Adresse
@@ -397,7 +410,6 @@ const Formulaire = () => {
                     />
                   </div>
 
-                  {/* Sélecteur pour le Type (Facture ou Devis) */}
                   <div className="mb-5.5">
                     <label className="mb-3 block text-sm font-medium base-content">
                       Type
@@ -405,7 +417,6 @@ const Formulaire = () => {
                     <select
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
                       name="type"
-                      // onChange et value pour gérer et afficher la valeur sélectionnée
                       value={type}
                       onChange={(e) => setType(e.target.value)}
                     >
@@ -414,7 +425,23 @@ const Formulaire = () => {
                     </select>
                   </div>
 
-                  {/* Sélecteur pour le Statut (pending, paid, Cancelled) */}
+                  {/* Ajout du nouveau champ pour la devise */}
+                  <div className="mb-5.5">
+                    <label className="mb-3 block text-sm font-medium base-content">
+                      Devise
+                    </label>
+                    <select
+                      className="w-full rounded border border-stroke bg-gray py-3 px-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
+                      name="currency"
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value)}
+                    >
+                      <option value="CFA">CFA</option>
+                      <option value="euro">Euro</option>
+                      <option value="dollar">Dollar</option>
+                    </select>
+                  </div>
+
                   <div className="mb-5.5">
                     <label className="mb-3 block text-sm font-medium base-content">
                       Statut
@@ -422,19 +449,16 @@ const Formulaire = () => {
                     <select
                       className="w-full rounded border border-stroke bg-gray py-3 px-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
                       name="status"
-                      // onChange et value pour gérer et afficher la valeur
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
                     >
                       <option value="Attente">Attente</option>
                       <option value="Payée">Payée</option>
-                      <option value="Annullée">Annulée</option>
+                      <option value="Annulée">Annulée</option>
                     </select>
                   </div>
 
                   <div className="p-7">
-                    {/* ... (les autres champs du formulaire) ... */}
-
                     {articles.map((article, index) => (
                       <div key={index} className="mb-5.5">
                         <select
@@ -449,7 +473,6 @@ const Formulaire = () => {
                             </option>
                           ))}
                         </select>
-                        {/* Ligne pour Référence et Description */}
                         <div className="flex flex-col gap-5.5 sm:flex-row">
                           <input
                             className="w-full my-1 sm:w-1/2 rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
@@ -469,7 +492,6 @@ const Formulaire = () => {
                           />
                         </div>
 
-                        {/* Ligne pour Quantité et Prix Unitaire */}
                         <div className="flex flex-col gap-5.5 sm:flex-row">
                           <input
                             className="w-full my-1 sm:w-1/2 rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
@@ -488,20 +510,34 @@ const Formulaire = () => {
                             onChange={(e) => handleChangeArticle(index, e)}
                           />
                         </div>
+                        {/* <div className="flex items-center my-3">
+                          <label className="mr-4">Catégorie :</label>
+                          <label className="mr-4">
+                            <input
+                              type="radio"
+                              name={`category-${index}`} // Nom unique pour chaque index d'article
+                              value="Traduction"
+                              checked={article.category === 'Traduction'}
+                              onChange={(e) => handleChangeArticle(index, e)} // Appel de la fonction de changement
+                            />{' '}
+                            Traduction
+                          </label>
+                          <label>
+                            <input
+                              type="radio"
+                              name={`category-${index}`} // Nom unique pour chaque index d'article
+                              value="Révision"
+                              checked={article.category === 'Révision'}
+                              onChange={(e) => handleChangeArticle(index, e)} // Appel de la fonction de changement
+                            />{' '}
+                            Révision
+                          </label>
+                        </div> */}
 
-                        {/* Champ pour Total */}
-                        {/* <input
-                            className="w- my-1 rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 base-content focus:border-primary focus-visible:outline-none dark:border-strokedark bg-base-300  dark:focus:border-primary"
-                            type="number"
-                            name="total"
-                            placeholder="Total"
-                           
-                            onChange={(e) => handleChangeArticle(e, index)}
-                          /> */}
                         <button
                           type="button"
                           className="btn btn-error btn-xs"
-                          onClick={() => supprimerArticle(index)} // 'index' est bien défini ici
+                          onClick={() => supprimerArticle(index)}
                         >
                           Supprimer cet article
                         </button>
@@ -516,7 +552,9 @@ const Formulaire = () => {
                       Ajouter un article
                     </button>
 
-                    {/* ... (les autres champs du formulaire et boutons d'action) ... */}
+                    {/* <UploadDocumentButton
+                      onDocumentProcessed={handleDocumentProcessed}
+                    /> */}
                   </div>
 
                   <div className="flex justify-end gap-4.5">
@@ -579,8 +617,6 @@ const Formulaire = () => {
             </div>
           </div>
         </div>
-
-        {/*  */}
       </div>
     </>
   )
